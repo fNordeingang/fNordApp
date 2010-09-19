@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">fNordeingang</string>
+    <string name="fNordTweet">fNordTweet</string>
+    <string name="fNordDoor">fNordDoor</string>
+    <string name="refresh">refresh</string>
+</resources>
