@@ -11,6 +11,10 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:src="@drawable/key_icon"/>
+   		<ImageButton android:id="@+id/fNordStatus"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/status_icon"/>
     </TableRow>
     
     <TableRow>
@@ -22,5 +26,9 @@
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
   		  	android:text="@string/fNordDoor"/>
+  		<TextView  
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content"
+  		  	android:text="@string/fNordStatus"/>
   	</TableRow>
 </TableLayout>

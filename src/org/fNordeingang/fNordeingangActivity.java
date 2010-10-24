@@ -20,8 +20,10 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         
         ImageButton tweetButton = (ImageButton)findViewById(R.id.fNordTweet);
         ImageButton doorButton = (ImageButton)findViewById(R.id.fNordDoor);
+		ImageButton statusButton = (ImageButton)findViewById(R.id.fNordStatus);
         tweetButton.setOnClickListener(this);
         doorButton.setOnClickListener(this);
+		statusButton.setOnClickListener(this);
     }
     
     public void onClick(View v) {
@@ -29,6 +31,14 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         if (id == R.id.fNordTweet) {
             // start fNordTweet
             this.startActivity(new Intent(this, fNordTweetActivity.class));
+		} else if (id == R.id.fNordStatus) {
+			// Status Action here
+            Context context = getApplicationContext();
+            CharSequence text = "not yet implemented!";
+            int duration = Toast.LENGTH_SHORT;
+			
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         } else if (id == R.id.fNordDoor) {
             // Door Action here
             Context context = getApplicationContext();
