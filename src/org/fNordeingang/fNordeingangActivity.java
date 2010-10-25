@@ -15,6 +15,9 @@ import android.content.Context;
 import android.view.View.OnClickListener;
 import android.content.Intent;
 
+//json
+import org.json.*;
+
 public class fNordeingangActivity extends Activity implements OnClickListener {
     
     /** Called when the activity is first created. */
@@ -105,23 +108,20 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			out.close();
 			sock.close();
 			
-			// parse status
-			for (i=0; i+4<line.length(); i++) {
-				//"open":
-				if (line.substring(i, i+4).equals("open")) {
-					int j = i+6;
-					while (line.charAt(j) != ',') {
-						j++;
-					}
-					if (line.substring(i+6, j).equals("true")) {
-						return "fNordeingang is open!";
-					} else if (line.substring(i+6, j).equals("false")) {
-						return "fNordeingang is closed.";
-					}
+			// get status
+			try {
+				JSONObject status = new JSONObject(line);
+				if (status.getBoolean("open")) {
+					return "fNordeingang is open!";
+				} else {
+					return "fNordeingang is closed.";
 				}
+
 			}
-			
-			return "couldn't read status";
+			catch (JSONException jsone) {
+				print(jsone.toString());
+				return "";
+			}
 			
 		} catch (IOException ioe) {
 				print("IOException");
