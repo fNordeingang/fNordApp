@@ -2,7 +2,6 @@ package org.fNordeingang;
 
 // java stuff
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 // android stuff
@@ -24,6 +23,11 @@ import javax.xml.parsers.SAXParser;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+// http
+import org.apache.http.impl.client.*;
+import org.apache.http.client.*;
+import de.mastacode.http.Http;
 
 public class fNordTweetActivity extends Activity {
     
@@ -62,44 +66,21 @@ public class fNordTweetActivity extends Activity {
         // for later optimized checking
         boolean fNordTweet_up_to_date = false;
         
-        InetAddress fNordTweetAddr;
-        try {
-            fNordTweetAddr = InetAddress.getByName("twitter.com");
-        } catch (UnknownHostException uhe) {
-            print("UnknownHostException");
-            return;
-        }
         try {
             if (!fNordTweet_up_to_date) {
-                // init some stuff
-                String line;
-                Socket sock = new Socket(fNordTweetAddr, HTTP_PORT);
-                
-                BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-                OutputStream out = sock.getOutputStream();
-                
-                // http get rss feed
-                String get_request = "GET /statuses/user_timeline/135627376.rss HTTP/1.1\nHost: twitter.com" + "\r\n\r\n";
-                out.write(get_request.getBytes());
-                
-                // skip http header
-                while ((line = in.readLine()) != null) {
-                    if ( line.equals("") ) { // empty line => end of http header - file following
-                        break;
-                    }
-                }
+				
+				// get rss string
+				HttpClient client = new DefaultHttpClient();
+				String rssstring = Http.get("http://twitter.com/statuses/user_timeline/135627376.rss").use(client).asString();
                 
                 // write rss file
                 FileOutputStream fos = openFileOutput("fNordTweet", Context.MODE_PRIVATE);
                 BufferedWriter fout = new BufferedWriter( new OutputStreamWriter( fos ));
-                while ((line = in.readLine()) != null) {
-                    fout.write(line + '\n');
-                }
+				
+				// write file
+				fout.write(rssstring);
                 
-                // close streams and socket
-                in.close();
-                out.close();
-                sock.close();
+                // close streams
                 fout.close();
                 fos.close();
             }
