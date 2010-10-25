@@ -15,7 +15,8 @@ import android.content.Context;
 import android.view.View.OnClickListener;
 import android.content.Intent;
 import android.widget.TextView;
-
+import android.widget.EditText;
+import android.text.method.PasswordTransformationMethod;
 // json
 import org.json.*;
 
@@ -62,7 +63,8 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
             this.startActivity(new Intent(this, fNordTweetActivity.class));
 		} else if (id == R.id.fNordStatus) {
 			// Status Action
-			print("comming soon!");
+			togglefNordStatusDialog();
+			
         } else if (id == R.id.fNordDoor) {
             // Door Action here
             print("not yet implemented!");
@@ -93,6 +95,73 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			print(jsone.toString());
 			return -1;
 		}
+	}
+	
+	public void togglefNordStatusDialog() {
+		
+		int status = getfNordStatus();
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		if (status == 1) { // open
+			builder.setMessage("Do you want to close?");
+		} else if (status == 0) { // closed
+			builder.setMessage("Do you want to open?");
+		} else {
+			print("Error: couldn't get fNordStatus");
+			return;
+		}
+		
+		builder.setCancelable(false);
+		
+		// toggle fNordStatus at yes
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				togglefNordStatus();
+			}
+		});
+		
+		// cancel dialog at no
+		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		
+		AlertDialog dialog = builder.create();
+		if (status == 1) { // open
+			dialog.setTitle("fnord is open");
+		} else if (status == 0) { // closed
+			dialog.setTitle("fnord is closed");
+		}
+		
+		dialog.show();
+	}
+	
+	public void togglefNordStatus() {
+		
+		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+		dialog.setMessage("Password:");
+		
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		input.setTransformationMethod(new PasswordTransformationMethod());
+		dialog.setView(input);  
+		   
+		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String password = input.getText().toString();
+				print("sending toggle command to server not implemented yet :-(");
+				// TODO: send toggle command to server
+			}
+		});
+		
+		dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.cancel();
+			}
+		});  
+		   
+		dialog.show();
 	}
 	
 	// helper function
