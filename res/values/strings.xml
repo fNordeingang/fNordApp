@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">fNordeingang</string>
-    <string name="fNordTweet">fNordTweet</string>
-    <string name="fNordDoor">fNordDoor</string>
-    <string name="fNordStatus">fNordStatus</string>
+    <string name="fNordTweet">Tweet</string>
+    <string name="fNordDoor">Door</string>
+    <string name="fNordStatus">Status</string>
     <string name="fNordStatusOpen">Status: open</string>
     <string name="fNordStatusClosed">Status: closed</string>
     <string name="refresh">refresh</string>
