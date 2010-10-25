@@ -15,7 +15,7 @@ import android.content.Context;
 import android.view.View.OnClickListener;
 import android.content.Intent;
 
-//json
+// json
 import org.json.*;
 
 public class fNordeingangActivity extends Activity implements OnClickListener {
@@ -94,7 +94,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 				}
 			}
 			
-			// get status line
+			// get status line (there is no new line at the end - so no in.readLine() possible)
 			char[] arr = new char[100];
 			int c; int i = 0;
 			while ('}' != (char)(c = in.read())) {
