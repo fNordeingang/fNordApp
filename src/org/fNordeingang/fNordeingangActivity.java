@@ -23,6 +23,7 @@ import org.json.*;
 // http
 import org.apache.http.impl.client.*;
 import org.apache.http.client.*;
+import org.apache.http.HttpResponse;
 import de.mastacode.http.Http;
 
 public class fNordeingangActivity extends Activity implements OnClickListener {
@@ -34,19 +35,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         setContentView(R.layout.main);
 		
 		// update label of fNordStatus
-		int status = getfNordStatus();
-		TextView statusView = (TextView)findViewById(R.id.fNordStatusLabel);
-		switch (status) {
-			case 0:
-				statusView.setText(R.string.fNordStatusClosed);
-				break;
-			case 1:
-				statusView.setText(R.string.fNordStatusOpen);
-				break;
-			default: // on error (f.e. no internet connection) just display the label
-				statusView.setText(R.string.fNordStatus);
-				break;
-		}
+		updatefNordStatusLabel();
         
         ImageButton tweetButton = (ImageButton)findViewById(R.id.fNordTweet);
         ImageButton doorButton = (ImageButton)findViewById(R.id.fNordDoor);
@@ -73,6 +62,23 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
             print("Error: Unknown Button pressed!");
         }
     }
+	
+	// updates the fNordStatus label
+	public void updatefNordStatusLabel() {
+		int status = getfNordStatus();
+		TextView statusView = (TextView)findViewById(R.id.fNordStatusLabel);
+		switch (status) {
+			case 0:
+				statusView.setText(R.string.fNordStatusClosed);
+				break;
+			case 1:
+				statusView.setText(R.string.fNordStatusOpen);
+				break;
+			default: // on error (f.e. no internet connection) just display the label
+				statusView.setText(R.string.fNordStatus);
+				break;
+		}
+	}
 	
 	public int getfNordStatus() {
 		try {
@@ -150,8 +156,28 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String password = input.getText().toString();
-				print("sending toggle command to server not implemented yet :-(");
-				// TODO: send toggle command to server
+				String tosend = "http://fnordeingang.de:4242/toggle/" + password;
+				
+				// send toggle command to webserver
+				try {
+					HttpClient client = new DefaultHttpClient();
+					String response = Http.post(tosend).use(client).asString();
+					
+					// get status
+					// if this throws a JSONException - no json object returned
+					// => maybe wrong password
+					JSONObject status = new JSONObject(response);
+					
+				} catch (IOException ioe) {
+					print(ioe.toString());
+					return;
+				} catch (JSONException jsone) {
+					print("Wrong Password?");
+					return;
+				}
+				
+				// update label of fNordStatus
+				updatefNordStatusLabel();
 			}
 		});
 		
