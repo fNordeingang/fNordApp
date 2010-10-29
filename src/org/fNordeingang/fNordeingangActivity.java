@@ -99,10 +99,10 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			}
 
 		} catch (IOException ioe) {
-			print(ioe.toString());
+			//print(ioe.toString());
 			return -1;
 		} catch (JSONException jsone) {
-			print(jsone.toString());
+			//print(jsone.toString());
 			return -1;
 		}
 	}
