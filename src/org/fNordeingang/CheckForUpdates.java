@@ -16,7 +16,7 @@ public class CheckForUpdates {
 	}
 	
 	public void check() {
-		
+		print("CheckForUpdates.check()");
 	}
 	
 	// helper function
