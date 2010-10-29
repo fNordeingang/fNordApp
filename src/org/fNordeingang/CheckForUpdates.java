@@ -3,6 +3,10 @@ package org.fNordeingang;
 // android
 import android.content.Context;
 import android.widget.Toast;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.PackageInfo;
+import android.content.Context;
 
 // http
 import de.mastacode.http.Http;
@@ -16,6 +20,11 @@ public class CheckForUpdates {
 	}
 	
 	public void check() {
+		/* Todo:
+		Context cont = getApplicationContext();
+		
+		PackageInfo version = getApplicationContext().getPackageManager().getPackageInfo("org.fNordeingang", 0);
+		*/
 		print("CheckForUpdates.check()");
 	}
 	
