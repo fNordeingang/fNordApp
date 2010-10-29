@@ -74,6 +74,7 @@ public class CheckForUpdates {
 				try {
 					HttpClient client = new DefaultHttpClient();
 					String latestURL = Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest_apk").use(client).asString();
+					// Todo: download correctly
 					Http.get(latestURL).use(client).asFile(new File("/Android/sdcard/download/", "fNordApp.apk"));
 				}
 				catch (IOException e) {
