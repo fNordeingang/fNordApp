@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.text.method.PasswordTransformationMethod;
+
 // json
 import org.json.*;
 
@@ -151,6 +152,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
 		input.setTransformationMethod(new PasswordTransformationMethod());
+		input.setInputType(0x00000080|0x00080000); // TYPE_TEXT_VARIATION_PASSWORD|TYPE_TEXT_FLAG_NO_SUGGESTIONS
 		dialog.setView(input);  
 		   
 		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
