@@ -21,14 +21,17 @@
     	<TextView  
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
+            android:gravity="center"
   		  	android:text="@string/fNordTweet"/>
   		<TextView  
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
+            android:gravity="center"
   		  	android:text="@string/fNordDoor"/>
   		<TextView android:id="@+id/fNordStatusLabel"
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
+            android:gravity="center"
   		  	android:text="@string/fNordStatus"/>
   	</TableRow>
 </TableLayout>
