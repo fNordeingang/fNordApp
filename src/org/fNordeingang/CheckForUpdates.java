@@ -3,6 +3,8 @@ package org.fNordeingang;
 // java
 import java.io.IOException;
 import java.io.File;
+import java.io.BufferedOutputStream;
+import java.net.*;
 
 // android
 import android.content.Context;
@@ -11,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PackageInfo;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 
@@ -74,9 +77,24 @@ public class CheckForUpdates {
 				try {
 					HttpClient client = new DefaultHttpClient();
 					String latestURL = Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest_apk").use(client).asString();
-					// Todo: download correctly
-					File newFile = new File("/Android/", "fNordApp.apk");
-					Http.get(latestURL).use(client).asFile(newFile);
+					
+					// download file
+					java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/fNordeingang-Beta-0.14.apk").openStream());
+					java.io.FileOutputStream fos = new java.io.FileOutputStream(context.getFilesDir().getPath() + "fNordApp.apk");
+					java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
+					byte[] data = new byte[1024];
+					int x=0;
+					while((x=in.read(data,0,1024))>=0) {
+						bout.write(data,0,x);
+					}
+					bout.close();
+					in.close();
+					
+					// open file
+					File f = new File(context.getFilesDir().getPath(), "fNordApp.apk");
+					ContentResolver cr = context.getContentResolver();
+					//cr.openFileDescriptor(f.toURI(), "rw");
+					
 				}
 				catch (IOException e) {
 					// nothing to do
