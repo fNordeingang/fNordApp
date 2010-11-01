@@ -94,7 +94,7 @@ public class CheckForUpdates {
 								apk.delete();
 							
 							// download file
-							java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/fNordeingang-Beta-0.14.apk").openStream());
+							java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL(latestURL).openStream());
 							java.io.FileOutputStream fos = new java.io.FileOutputStream(apk);
 							java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
 							byte[] data = new byte[1024];
