@@ -16,6 +16,9 @@ import android.content.Context;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.app.ProgressDialog;
 
 // http
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -24,6 +27,7 @@ import de.mastacode.http.Http;
 
 public class CheckForUpdates {
 	
+	ProgressDialog progress;
 	Context context;
 	
 	CheckForUpdates(Context context) {
@@ -73,32 +77,51 @@ public class CheckForUpdates {
 		// download at yes
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				// download url of latest version
-				try {
-					HttpClient client = new DefaultHttpClient();
-					String latestURL = Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest_apk").use(client).asString();
-					
-					// download file
-					java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/fNordeingang-Beta-0.14.apk").openStream());
-					java.io.FileOutputStream fos = new java.io.FileOutputStream(context.getFilesDir().getPath() + "fNordApp.apk");
-					java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
-					byte[] data = new byte[1024];
-					int x=0;
-					while((x=in.read(data,0,1024))>=0) {
-						bout.write(data,0,x);
+				
+				// show a progress
+				progress = ProgressDialog.show(context, "", "Downloading. Please wait...", true, false);
+				
+				new Thread() {
+					public void run() {
+						// download url of latest version
+						try {
+							HttpClient client = new DefaultHttpClient();
+							String latestURL = Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest_apk").use(client).asString();
+							
+							// if there is a previous file - delete it
+							File apk = new File(context.getExternalFilesDir(null), "fNordApp.apk");
+							if (apk.exists())
+								apk.delete();
+							
+							// download file
+							java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/fNordeingang-Beta-0.14.apk").openStream());
+							java.io.FileOutputStream fos = new java.io.FileOutputStream(apk);
+							java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
+							byte[] data = new byte[1024];
+							int x=0;
+							while((x=in.read(data,0,1024))>=0) {
+								bout.write(data,0,x);
+							}
+							bout.close();
+							in.close();
+							
+							// don't display progress anymore
+							progress.dismiss();
+							
+							// install apk
+							android.net.Uri uri = android.net.Uri.fromFile(apk);
+							
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setDataAndType(uri, "application/vnd.android.package-archive");
+							context.startActivity(intent);
+							
+						}
+						catch (IOException e) {
+							print("Error downloading");
+							progress.dismiss();
+						}
 					}
-					bout.close();
-					in.close();
-					
-					// open file
-					File f = new File(context.getFilesDir().getPath(), "fNordApp.apk");
-					ContentResolver cr = context.getContentResolver();
-					//cr.openFileDescriptor(f.toURI(), "rw");
-					
-				}
-				catch (IOException e) {
-					// nothing to do
-				}
+				}.start();
 			}
 		});
 		
