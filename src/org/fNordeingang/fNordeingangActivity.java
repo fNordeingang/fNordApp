@@ -88,7 +88,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		try {
 			// get json string
 			HttpClient client = new DefaultHttpClient();
-			String jsonstring = Http.get("http://fnordeingang.de:4242/status").use(client).asString();
+			String jsonstring = Http.get("http://fnordeingang.de:4242").use(client).asString();
 			
 			// get status
 			JSONObject status = new JSONObject(jsonstring);
@@ -154,7 +154,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
-		input.setTransformationMethod(new PasswordTransformationMethod()); // <--- still need of this? (TYPE_TEXT_VARIATION_PASSWORD) // Gordon
+		input.setTransformationMethod(new PasswordTransformationMethod());
 		// password dots / no dictionary suggestions
 		input.setInputType(0x00000080|0x00080000); // TYPE_TEXT_VARIATION_PASSWORD|TYPE_TEXT_FLAG_NO_SUGGESTIONS
 		dialog.setView(input);  
@@ -162,12 +162,15 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String password = input.getText().toString();
-				String tosend = "http://fnordeingang.de:4242/toggle/" + password;
+				String tosend = "http://fnordeingang.de:4242/toggle";
 				
 				// send toggle command to webserver
 				try {
+					// toggle => includes password for toggle post
+					String toggle = new JSONObject().put("password", password).toString();
+					
 					HttpClient client = new DefaultHttpClient();
-					String response = Http.post(tosend).use(client).asString();
+					String response = Http.post(tosend).data("jsondata", toggle).use(client).asString();
 					
 					// get status
 					// if this throws a JSONException - no json object returned
