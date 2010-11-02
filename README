@@ -1,0 +1,20 @@
+
+Readme for fNordApp
+
+*****************************************************
+COMPILING:
+
+1: install Android SDK
+
+2: create a signing key: see http:// for more information
+
+3: edit sdk.dir in local.properties file to fit your sdk location.
+
+4: edit build.properties to your needs
+
+5: type: ant release
+
+This will compile and create an apk archive. It will be in bin/fNordeingang-release.apk
+
+*****************************************************
+
