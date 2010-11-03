@@ -6,7 +6,7 @@ COMPILING:
 
 1: install Android SDK
 
-2: create a signing key: see http:// for more information
+2: create a signing key: see http://developer.android.com/guide/publishing/app-signing.html#cert for more information
 
 3: edit sdk.dir in local.properties file to fit your sdk location.
 
