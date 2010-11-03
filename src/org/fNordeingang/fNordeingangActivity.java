@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.text.method.PasswordTransformationMethod;
 import android.text.InputType;
+import android.os.Bundle;
+import android.os.Message;
+import android.os.Handler;
 
 // json
 import org.json.*;
@@ -70,18 +73,46 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 	
 	// updates the fNordStatus label
 	public void updatefNordStatusLabel() {
-		int status = getfNordStatus();
-		TextView statusView = (TextView)findViewById(R.id.fNordStatusLabel);
-		switch (status) {
-			case 0:
-				statusView.setText(R.string.fNordStatusClosed);
-				break;
-			case 1:
-				statusView.setText(R.string.fNordStatusOpen);
-				break;
-			default: // on error (f.e. no internet connection) just display the label
-				statusView.setText(R.string.fNordStatus);
-				break;
+		updatefNordStatusLabelThread ufslt = new updatefNordStatusLabelThread(updatefNordStatusLabelHandler);
+		ufslt.start();
+	}
+	
+    final Handler updatefNordStatusLabelHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			int status = msg.getData().getInt("status");
+			TextView statusView = (TextView)findViewById(R.id.fNordStatusLabel);
+			switch (status) {
+				case 0:
+					statusView.setText(R.string.fNordStatusClosed);
+					break;
+				case 1:
+					statusView.setText(R.string.fNordStatusOpen);
+					break;
+				default: // on error (f.e. no internet connection) just display the label
+					statusView.setText(R.string.fNordStatus);
+					break;
+			}
+		}
+	};
+
+	private class updatefNordStatusLabelThread extends Thread {
+		Handler handler;
+		
+		updatefNordStatusLabelThread(Handler h) {
+			handler = h;
+		}
+		
+		public void run() {
+			// get status
+			int status = getfNordStatus();
+			
+			// send status to main thread
+			Message msg = handler.obtainMessage();
+			Bundle b = new Bundle();
+			b.putInt("status", status);
+			msg.setData(b);
+			handler.sendMessage(msg);
+			
 		}
 	}
 	

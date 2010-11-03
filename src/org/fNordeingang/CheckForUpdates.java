@@ -42,7 +42,7 @@ public class CheckForUpdates {
 		dsvt.start();
 	}
 	
-	// Define the Handler that receives messages from the thread and update the progress
+	// Define the Handler that receives messages from the DownloadServerVersionThread and proofs for updates
     final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			// get local version code
@@ -66,10 +66,10 @@ public class CheckForUpdates {
 
 	// Nested class that downloads the serverVersion information
 	private class DownloadServerVersionThread extends Thread {
-		Handler mHandler;
+		Handler handler;
 		
 		DownloadServerVersionThread(Handler h) {
-			mHandler = h;
+			handler = h;
 		}
 		
 		public void run() {
@@ -80,11 +80,11 @@ public class CheckForUpdates {
 				int serverVersion = Integer.parseInt(Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest").use(client).asString().trim());
 				
 				// send version to main thread
-				Message msg = mHandler.obtainMessage();
+				Message msg = handler.obtainMessage();
 				Bundle b = new Bundle();
 				b.putInt("serverVersion", serverVersion);
 				msg.setData(b);
-				mHandler.sendMessage(msg);
+				handler.sendMessage(msg);
 				
 			} catch (IOException e) {
 				// nothing to be done
