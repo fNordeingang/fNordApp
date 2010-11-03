@@ -19,6 +19,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.os.Message;
+import android.os.Handler;
 
 // http
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -35,33 +38,59 @@ public class CheckForUpdates {
 	}
 	
 	public void check() {
-		
-		int localVersion = 0;
-		String serverVersion = "";
-		
-		// get local version code
-		try {
-			PackageInfo versionInfo = context.getPackageManager().getPackageInfo("org.fNordeingang", 0);
-			localVersion = versionInfo.versionCode;
-		
-			// get version from server
-			HttpClient client = new DefaultHttpClient();
-			serverVersion = Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest").use(client).asString();
-		
-			// compare versions
-			if (localVersion > 0 && serverVersion != "") {
-				if (Integer.parseInt(serverVersion.trim()) > localVersion) {
+		DownloadServerVersionThread dsvt = new DownloadServerVersionThread(handler);
+		dsvt.start();
+	}
+	
+	// Define the Handler that receives messages from the thread and update the progress
+    final Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			// get local version code
+			try {
+				PackageInfo versionInfo = context.getPackageManager().getPackageInfo("org.fNordeingang", 0);
+				int localVersion = versionInfo.versionCode;
+	
+				int serverVersion = msg.getData().getInt("serverVersion");
+	
+				// compare versions
+				if (localVersion > 0 && serverVersion > localVersion) {
 					// newer version available:
 					downloadLatestVersion();
 				}
+	
+			} catch (PackageManager.NameNotFoundException e) {
+				// nothing to be done
 			}
+		}
+	};
+
+	// Nested class that downloads the serverVersion information
+	private class DownloadServerVersionThread extends Thread {
+		Handler mHandler;
+		
+		DownloadServerVersionThread(Handler h) {
+			mHandler = h;
+		}
+		
+		public void run() {
 			
-		} catch (PackageManager.NameNotFoundException e) {
-			// nothing to be done
-		} catch (IOException e) {
-			// nothing to be done
-		} catch (NumberFormatException e) {
-			print("NumberFormatException");
+			try {
+				// get version from server
+				HttpClient client = new DefaultHttpClient();
+				int serverVersion = Integer.parseInt(Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest").use(client).asString().trim());
+				
+				// send version to main thread
+				Message msg = mHandler.obtainMessage();
+				Bundle b = new Bundle();
+				b.putInt("serverVersion", serverVersion);
+				msg.setData(b);
+				mHandler.sendMessage(msg);
+				
+			} catch (IOException e) {
+				// nothing to be done
+			} catch (NumberFormatException e) {
+				print("NumberFormatException");
+			}
 		}
 	}
 	

@@ -60,7 +60,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			togglefNordStatusDialog();
 			
         } else if (id == R.id.fNordDoor) {
-            // Door Action here
+            // maybe in future
             print("not yet implemented!");
         } else {
             // Error here
