@@ -4,10 +4,10 @@ package org.fNordeingang;
 import java.io.*;
 
 // android
-import android.app.Activity;
 import android.app.*;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -104,7 +104,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		
 		public void run() {
 			// get status
-			int status = getfNordStatus();
+			int status = org.fNordeingang.fNordStatusInterface.getfNordStatus();
 			
 			// send status to main thread
 			Message msg = handler.obtainMessage();
@@ -116,38 +116,19 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	public int getfNordStatus() {
-		try {
-			// get json string
-			HttpClient client = new DefaultHttpClient();
-			String jsonstring = Http.get("http://fnordeingang.de:4242").use(client).asString();
-			
-			// get status
-			JSONObject status = new JSONObject(jsonstring);
-			if (status.getBoolean("open")) {
-				return 1; // open
-			} else {
-				return 0; // closed
-			}
-
-		} catch (IOException ioe) {
-			//print(ioe.toString());
-			return -1;
-		} catch (JSONException jsone) {
-			//print(jsone.toString());
-			return -1;
-		}
-	}
 	
 	public void togglefNordStatusDialog() {
 		
-		int status = getfNordStatus();
-		
+		int status = org.fNordeingang.fNordStatusInterface.getfNordStatus();
+		Log.v("Status:",Integer.toString(status));
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (status == 1) { // open
 			builder.setMessage("Do you want to close?");
 		} else if (status == 0) { // closed
 			builder.setMessage("Do you want to open?");
+		} else if (status == -1) {
+			print("Error: IO or JSON Exception!");
+			return;
 		} else {
 			print("Error: couldn't get fNordStatus");
 			return;
@@ -158,7 +139,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		// toggle fNordStatus at yes
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				togglefNordStatus();
+				startActivity(new Intent(fNordeingangActivity.this , fNordToggleActivity.class));
 			}
 		});
 		
@@ -179,56 +160,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		dialog.show();
 	}
 	
-	public void togglefNordStatus() {
-		
-		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-		dialog.setMessage("Password:");
-		
-		// Set an EditText view to get user input
-		final EditText input = new EditText(this);
-		input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-		input.setTransformationMethod(new PasswordTransformationMethod());
-		dialog.setView(input);  
-		   
-		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				String password = input.getText().toString();
-				String tosend = "http://fnordeingang.de:4242/toggle";
-				
-				// send toggle command to webserver
-				try {
-					// toggle => includes password for toggle post
-					String toggle = new JSONObject().put("password", password).toString();
-					
-					HttpClient client = new DefaultHttpClient();
-					String response = Http.post(tosend).data("jsondata", toggle).use(client).asString();
-					
-					// get status
-					// if this throws a JSONException - no json object returned
-					// => maybe wrong password
-					JSONObject status = new JSONObject(response);
-					
-				} catch (IOException ioe) {
-					print(ioe.toString());
-					return;
-				} catch (JSONException jsone) {
-					print("Wrong Password?");
-					return;
-				}
-				
-				// update label of fNordStatus
-				updatefNordStatusLabel();
-			}
-		});
-		
-		dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				dialog.cancel();
-			}
-		});  
-		   
-		dialog.show();
-	}
+	
 	
 	// helper function
 	void print(String input) {
