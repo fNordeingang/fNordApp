@@ -52,22 +52,21 @@ public final class fNordStatusInterface {
 	
 	public static int setfNordStatus(final String username, final String password) {
 		try {
-			JSONObject userdata = new JSONObject().put("username", username).put("password", password);
-			Log.v("Data:",userdata.toString());		
-			
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpost = new HttpPost("http://services.fnordeingang.de/services/api/status");
-					
+			
+			JSONObject userdata = new JSONObject().put("username", username).put("password", password);
+			Log.v("Data:",userdata.toString());	
 			StringEntity se = new StringEntity(userdata.toString());
+			
 			httpost.setEntity(se);
 			httpost.setHeader("Accept", "application/json");
 			httpost.setHeader("Content-type", "application/json");
 
 			ResponseHandler responseHandler = new BasicResponseHandler();
 			String response = httpclient.execute(httpost, responseHandler);
-
 			Log.v("Response:",response);
-			// get status
+			
 			// if this throws a JSONException - no json object returned
 			// => maybe wrong password
 			JSONObject status = new JSONObject(response);
@@ -79,9 +78,9 @@ public final class fNordStatusInterface {
 			Log.v("JSONe: ", jsone.toString());
 			return 0;
 		} catch (Exception e) {
+			Log.v("e: ", e.toString());
 			return -2;
 		}
 		return 1;
-		
 	}
 }
