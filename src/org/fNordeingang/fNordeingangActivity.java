@@ -125,6 +125,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 	public void togglefNordStatusDialog() {
 		
 		int status = org.fNordeingang.fNordStatusInterface.getfNordStatus();
+		updatefNordStatusLabel();
 		Log.v("Status:",Integer.toString(status));
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (status == 1) { // open
