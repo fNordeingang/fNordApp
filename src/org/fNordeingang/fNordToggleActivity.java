@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.widget.TextView;
 import android.widget.TableLayout;
@@ -69,9 +70,13 @@ public class fNordToggleActivity extends Activity {
 				else if  (Status == -1) {
 					Toast.makeText(this, "IO Exception!", Toast.LENGTH_LONG).show();
 					return;
+				} else if (Status == -2) {
+					Toast.makeText(this, "General Exception!", Toast.LENGTH_LONG).show();
+					return;
 				}
 				// update label of fNordStatus
 				//updatefNordStatusLabel();
+				this.startActivity(new Intent(this, fNordeingangActivity.class));
 				break;
 		}
 		

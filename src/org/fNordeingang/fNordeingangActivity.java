@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.Context;
 import android.view.View.OnClickListener;
@@ -81,15 +82,19 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		public void handleMessage(Message msg) {
 			int status = msg.getData().getInt("status");
 			TextView statusView = (TextView)findViewById(R.id.fNordStatusLabel);
+			ImageView imageView = (ImageView)findViewById(R.id.fNordStatusIcon);
 			switch (status) {
 				case 0:
 					statusView.setText(R.string.fNordStatusClosed);
+					imageView.setImageResource(R.drawable.closed);
 					break;
 				case 1:
 					statusView.setText(R.string.fNordStatusOpen);
+					imageView.setImageResource(R.drawable.open);
 					break;
 				default: // on error (f.e. no internet connection) just display the label
 					statusView.setText(R.string.fNordStatus);
+					imageView.setImageResource(R.drawable.unknown);
 					break;
 			}
 		}

@@ -1,37 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <TableRow>
-  		<ImageButton android:id="@+id/fNordTweet"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:src="@drawable/twitter_icon"/>
-   		<ImageButton android:id="@+id/fNordDoor"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:src="@drawable/key_icon"/>
-   		<ImageButton android:id="@+id/fNordStatus"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:src="@drawable/status_icon"/>
+        <ImageView android:id="@+id/fNordLogo" android:src="@drawable/logo" android:layout_width="150dp" android:layout_height="150dp"></ImageView>
+			<TableRow>
+  		  	  	<TextView android:id="@+id/fNordStatusLabel"
+    				android:layout_width="wrap_content" 
+    				android:layout_height="wrap_content"
+            		android:gravity="center"
+  		  			android:text="@string/fNordStatus"/>
+   		  		<ImageView android:src="@drawable/unknown" android:id="@+id/fNordStatusIcon" android:paddingLeft="10dp" android:paddingTop="12dp"></ImageView>
+  		  	</TableRow>
     </TableRow>
-    
-    <TableRow>
+    <TextView android:gravity="center" android:text="fNordControl" android:textSize="20dp" android:textColor="@color/fNordGreen" android:textStyle="bold"/>
+    <TableLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+			
+			<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+  				<ImageButton android:id="@+id/fNordTweet"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:src="@drawable/twitter_icon"/>
+   				<ImageButton android:id="@+id/fNordDoor"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:src="@drawable/key_icon"/>
+   				<ImageButton android:id="@+id/fNordStatus"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:src="@drawable/status_icon"/>
+        	</TableRow>
+        	    <TableRow>
     	<TextView  
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
             android:gravity="center"
-  		  	android:text="@string/fNordTweet"/>
+  		  	android:text="@string/fNordTweetText"/>
   		<TextView  
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
             android:gravity="center"
-  		  	android:text="@string/fNordDoor"/>
-  		<TextView android:id="@+id/fNordStatusLabel"
+  		  	android:text="@string/fNordDoorText"/>
+  		<TextView 
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
             android:gravity="center"
-  		  	android:text="@string/fNordStatus"/>
+  		  	android:text="@string/fNordToggleText"/>
   	</TableRow>
+    </TableLayout>   
 </TableLayout>
+
