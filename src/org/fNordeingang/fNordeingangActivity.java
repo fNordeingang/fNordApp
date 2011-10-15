@@ -86,15 +86,15 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			switch (status) {
 				case 0:
 					statusView.setText(R.string.fNordStatusClosed);
-					imageView.setImageResource(R.drawable.closed);
+					imageView.setImageResource(R.drawable.closed_icon);
 					break;
 				case 1:
 					statusView.setText(R.string.fNordStatusOpen);
-					imageView.setImageResource(R.drawable.open);
+					imageView.setImageResource(R.drawable.open_icon);
 					break;
 				default: // on error (f.e. no internet connection) just display the label
-					statusView.setText(R.string.fNordStatus);
-					imageView.setImageResource(R.drawable.unknown);
+					statusView.setText(R.string.fNordStatusUnknown);
+					imageView.setImageResource(R.drawable.unknownstatus_icon);
 					break;
 			}
 		}

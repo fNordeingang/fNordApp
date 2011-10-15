@@ -4,15 +4,15 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <TableRow>
-        <ImageView android:id="@+id/fNordLogo" android:src="@drawable/logo" android:layout_width="150dp" android:layout_height="150dp"></ImageView>
+    <TableRow android:gravity="center">
 			<TableRow>
+				<ImageView android:id="@+id/fNordLogo" android:src="@drawable/logo" android:layout_width="150dp" android:layout_height="150dp"></ImageView>
   		  	  	<TextView android:id="@+id/fNordStatusLabel"
     				android:layout_width="wrap_content" 
     				android:layout_height="wrap_content"
             		android:gravity="center"
-  		  			android:text="@string/fNordStatus"/>
-   		  		<ImageView android:src="@drawable/unknown" android:id="@+id/fNordStatusIcon" android:paddingLeft="10dp" android:paddingTop="12dp"></ImageView>
+  		  			android:text="@string/fNordStatusUnknown"/>
+   		  		<ImageView android:src="@drawable/unknownstatus_icon" android:id="@+id/fNordStatusIcon" android:paddingLeft="10dp" android:paddingTop="12dp"></ImageView>
   		  	</TableRow>
     </TableRow>
     <TextView android:gravity="center" android:text="fNordControl" android:textSize="20dp" android:textColor="@color/fNordGreen" android:textStyle="bold"/>
@@ -22,7 +22,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 			
-			<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+			<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center">
   				<ImageButton android:id="@+id/fNordTweet"
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content"
@@ -35,8 +35,11 @@
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content"
         			android:src="@drawable/status_icon"/>
+        		<ImageButton android:id="@+id/fNordButton4"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content" android:src="@drawable/calendar_icon"/>
         	</TableRow>
-        	    <TableRow>
+        	    <TableRow android:gravity="center">
     	<TextView  
     		android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
@@ -52,7 +55,50 @@
     		android:layout_height="wrap_content"
             android:gravity="center"
   		  	android:text="@string/fNordToggleText"/>
+  		<TextView 
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content"
+            android:gravity="center" android:text="@string/fNordCalendarText"/>  
   	</TableRow>
-    </TableLayout>   
+  	<TableLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+			
+			<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center">
+  				<ImageButton android:id="@+id/fNordButton5"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content" android:src="@drawable/powerctrl_icon"/>
+   				<ImageButton android:id="@+id/fNordButton6"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content" android:src="@drawable/cash_icon"/>
+   				<ImageButton android:id="@+id/fNordButton7"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content" android:src="@drawable/settings_icon"/>
+        		<ImageButton android:id="@+id/fNordButton8"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content" android:src="@drawable/about_icon"/>
+        	</TableRow>
+        	    <TableRow android:gravity="center">
+    	<TextView  
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content"
+            android:gravity="center" android:text="@string/fNordPowerCtrlText"/>
+  		<TextView  
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content"
+            android:gravity="center" android:text="@string/fNordCashText"/>
+  		<TextView 
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content"
+            android:gravity="center" android:text="@string/fNordSettingsText"/>
+  		<TextView 
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content"
+            android:gravity="center" android:text="@string/fNordAboutText"/>  
+  	</TableRow>
+    </TableLayout> 
+    </TableLayout>
 </TableLayout>
 

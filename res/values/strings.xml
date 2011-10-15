@@ -2,16 +2,21 @@
 <resources>
     <string name="app_name">fNordeingang</string>
     
-    <string name="fNordStatus">\nfNordStatus is: \n unknown</string>
+    <string name="fNordStatusUnknown">\nfNordStatus is: \n unknown</string>
     <string name="fNordStatusOpen">\nfNordStatus is: \n open</string>
     <string name="fNordStatusClosed">\nfNordStatus is: \n closed</string>
     <string name="refresh">refresh</string>
-    <string name="userdataview">Please enter username and password.</string>
-    <string name="userfield">Username</string>
-    <string name="passfield">Password</string>
-    <string name="sendbutton">Send</string>
+    <string name="fNordStatusInfo">Please enter username and password.</string>
+    <string name="fNordStatusUserfield">Username</string>
+    <string name="fNordStatusPassfield">Password</string>
+    <string name="fNordStatusSendbutton">Send</string>
     <color name="fNordGreen">#097c42</color>
     <string name="fNordTweetText">Tweet</string>
     <string name="fNordDoorText">Open\nDoor</string>
     <string name="fNordToggleText">Toggle\nStatus</string>
+    <string name="fNordAboutText">About\nfNordApp</string>
+    <string name="fNordSettingsText">Settings</string>
+    <string name="fNordCalendarText">fNord\nCalendar</string>
+    <string name="fNordPowerCtrlText">fNord\nPowerCtrl</string>
+    <string name="fNordCashText">fNordCash</string>
 </resources>
