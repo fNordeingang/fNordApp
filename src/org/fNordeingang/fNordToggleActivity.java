@@ -76,7 +76,10 @@ public class fNordToggleActivity extends Activity {
 				}
 				// update label of fNordStatus
 				//updatefNordStatusLabel();
-				this.startActivity(new Intent(this, fNordeingangActivity.class));
+				//this.startActivity(new Intent(this, fNordeingangActivity.class));
+				setResult(1,new Intent());//Here I am Setting the Requestcode 1, you can put according to your requirement
+		        finish();
+				//finishActivity(Status);
 				break;
 		}
 		

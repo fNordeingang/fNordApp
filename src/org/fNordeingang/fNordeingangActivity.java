@@ -33,7 +33,7 @@ import org.apache.http.HttpResponse;
 import de.mastacode.http.Http;
 
 public class fNordeingangActivity extends Activity implements OnClickListener {
-    
+	int requestCode;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,18 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         tweetButton.setOnClickListener(this);
         doorButton.setOnClickListener(this);
 		statusButton.setOnClickListener(this);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the request went well (OK) and the request was PICK_CONTACT_REQUEST
+    	Log.v("requestCode: ", Integer.toString(requestCode));
+    	Log.v("resultCode: ", Integer.toString(resultCode));
+    	super.onActivityResult(requestCode, resultCode, data);
+        if ( resultCode == 1) {
+            
+        	updatefNordStatusLabel();
+            
+        }
     }
     
     public void onClick(View v) {
@@ -145,7 +157,9 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		// toggle fNordStatus at yes
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				startActivity(new Intent(fNordeingangActivity.this , fNordToggleActivity.class));
+				Intent intent = new Intent(fNordeingangActivity.this, fNordToggleActivity.class);
+				//startActivity(new Intent(fNordeingangActivity.this , fNordToggleActivity.class));
+				startActivityForResult(intent, requestCode);
 			}
 		});
 		
