@@ -6,6 +6,7 @@ import java.io.*;
 // android
 import android.app.*;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,10 +30,17 @@ import org.json.*;
 // http
 import org.apache.http.impl.client.*;
 import org.apache.http.client.*;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.HttpResponse;
 import de.mastacode.http.Http;
 
+//SimpleCrypto
+import net.sf.andhsli.SimpleCrypto;
+
 public class fNordeingangActivity extends Activity implements OnClickListener {
+	public static final String fNordSettingsFilename = "fNordAppSettingsTesting";
+	public static final String fNordCryptoKey = "fNordAppTesting";
 	int requestCode;
     /** Called when the activity is first created. */
     @Override
@@ -49,9 +57,11 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         ImageButton tweetButton = (ImageButton)findViewById(R.id.fNordTweet);
         ImageButton doorButton = (ImageButton)findViewById(R.id.fNordDoor);
 		ImageButton statusButton = (ImageButton)findViewById(R.id.fNordStatus);
+		ImageButton settingsButton = (ImageButton)findViewById(R.id.fNordSettings);
         tweetButton.setOnClickListener(this);
         doorButton.setOnClickListener(this);
 		statusButton.setOnClickListener(this);
+		settingsButton.setOnClickListener(this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -78,11 +88,73 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         } else if (id == R.id.fNordDoor) {
             // maybe in future
             print("not yet implemented!");
+        } else if (id == R.id.fNordSettings) {
+        	startActivityForResult(new Intent(this, fNordSettingsActivity.class), requestCode);
         } else {
             // Error here
             print("Error: Unknown Button pressed!");
         }
     }
+
+	public static int getfNordStatus() {
+		try {
+			// get json string
+			HttpClient client = new DefaultHttpClient();
+			String jsonstring = Http.get("http://services.fnordeingang.de/services/api/status").use(client).asString();
+			
+			Log.v("Jsonstring",jsonstring);
+			// get status
+			JSONObject status = (JSONObject) new JSONTokener(jsonstring).nextValue();
+			status = status.getJSONObject("status");
+			
+			if (status.getBoolean("open")) {
+				return 1; // open
+			} else {
+				return 0; // closed
+			}
+
+		} catch (IOException ioe) {
+			Log.v("IOE",ioe.toString());
+			return -1;
+		} catch (JSONException jsone) {
+			Log.v("Json",jsone.toString());
+			return -1;
+		}
+	}
+	
+	public static int setfNordStatus(final String username, final String password) {
+		try {
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+			HttpPost httpost = new HttpPost("http://services.fnordeingang.de/services/api/status");
+			
+			JSONObject userdata = new JSONObject().put("username", username).put("password", password);
+			Log.v("Data:",userdata.toString());	
+			StringEntity se = new StringEntity(userdata.toString());
+			
+			httpost.setEntity(se);
+			httpost.setHeader("Accept", "application/json");
+			httpost.setHeader("Content-type", "application/json");
+
+			ResponseHandler responseHandler = new BasicResponseHandler();
+			String response = httpclient.execute(httpost, responseHandler);
+			Log.v("Response:",response);
+			
+			// if this throws a JSONException - no json object returned
+			// => maybe wrong password
+			JSONObject status = new JSONObject(response);
+			
+		} catch (IOException ioe) {
+			Log.v("IOE: ", ioe.toString());
+			return -1;
+		} catch (JSONException jsone) {
+			Log.v("JSONe: ", jsone.toString());
+			return 0;
+		} catch (Exception e) {
+			Log.v("e: ", e.toString());
+			return -2;
+		}
+		return 1;
+	}
 	
 	// updates the fNordStatus label
 	public void updatefNordStatusLabel() {
@@ -121,7 +193,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		
 		public void run() {
 			// get status
-			int status = org.fNordeingang.fNordStatusInterface.getfNordStatus();
+			int status = getfNordStatus();
 			
 			// send status to main thread
 			Message msg = handler.obtainMessage();
@@ -133,10 +205,9 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	
 	public void togglefNordStatusDialog() {
 		
-		int status = org.fNordeingang.fNordStatusInterface.getfNordStatus();
+		int status = getfNordStatus();
 		updatefNordStatusLabel();
 		Log.v("Status:",Integer.toString(status));
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -157,10 +228,35 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		// toggle fNordStatus at yes
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				Intent intent = new Intent(fNordeingangActivity.this, fNordToggleActivity.class);
-				//startActivity(new Intent(fNordeingangActivity.this , fNordToggleActivity.class));
-				startActivityForResult(intent, requestCode);
-			}
+				SharedPreferences settings = getSharedPreferences(fNordSettingsFilename, 0);
+		        String username = null;
+		        String password = null;
+		        try {
+					username = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("username", null));
+					password = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("password", null));
+				    } catch (Exception e) {
+				    	Log.v("Exception e", "Oh noes!");
+				    	print("Something went terribly wrong...");
+				    }
+		        if (username != null & username.length() != 0 | password.length() != 0 ) {
+					String tosend = "http://services.fnordeingang.de/services/api/status";
+					int Status;
+					// send toggle command to webserver
+					Status = setfNordStatus(username,password);
+					if (Status == 0) {
+						print("Wrong Password?");
+					} else if  (Status == -1) {
+						print("IO Exception!");
+					} else if (Status == -2) {
+						print("General Exception!");
+					} else {
+						print("fNordStatus successfully changed");
+						updatefNordStatusLabel();
+					}
+		        } else {
+					print("Please enter username & password in settings!");
+					}
+		        }
 		});
 		
 		// cancel dialog at no

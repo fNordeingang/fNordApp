@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" android:weightSum="1">
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/fNordSettingsUserInfo" android:id="@+id/SettingsText1"></TextView>
+    <TextView android:text="@string/fNordSettingsUserfield" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/SettingsText2"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/fNordSettingsUserfield">
+        <requestFocus></requestFocus>
+    </EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/fNordSettingsPassfield" android:id="@+id/SettingsText3"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:inputType="textPassword" android:id="@+id/fNordSettingsPassfield"></EditText>
+    <Button android:text="@string/fNordSettingsSaveButton" android:layout_height="wrap_content" android:layout_width="wrap_content" android:onClick="savefNordSettings" android:id="@+id/fNordSettingsSaveButton"></Button>
+</LinearLayout>

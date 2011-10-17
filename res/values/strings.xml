@@ -19,4 +19,8 @@
     <string name="fNordCalendarText">fNord\nCalendar</string>
     <string name="fNordPowerCtrlText">fNord\nPowerCtrl</string>
     <string name="fNordCashText">fNordCash</string>
+    <string name="fNordSettingsUserInfo">Please enter username and password.</string>
+    <string name="fNordSettingsUserfield">Username</string>
+    <string name="fNordSettingsPassfield">Password</string>
+    <string name="fNordSettingsSaveButton">Save</string>
 </resources>

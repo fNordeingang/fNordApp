@@ -35,7 +35,7 @@
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content"
         			android:src="@drawable/status_icon"/>
-        		<ImageButton android:id="@+id/fNordButton4"
+        		<ImageButton android:id="@+id/fNordCalendar"
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content" android:src="@drawable/calendar_icon"/>
         	</TableRow>
@@ -67,16 +67,16 @@
 		android:layout_height="match_parent">
 			
 			<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center">
-  				<ImageButton android:id="@+id/fNordButton5"
+  				<ImageButton android:id="@+id/fNordPowerCtrl"
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content" android:src="@drawable/powerctrl_icon"/>
-   				<ImageButton android:id="@+id/fNordButton6"
+   				<ImageButton android:id="@+id/fNordCash"
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content" android:src="@drawable/cash_icon"/>
-   				<ImageButton android:id="@+id/fNordButton7"
+   				<ImageButton android:id="@+id/fNordSettings"
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content" android:src="@drawable/settings_icon"/>
-        		<ImageButton android:id="@+id/fNordButton8"
+        		<ImageButton android:id="@+id/fNordAbout"
         			android:layout_width="wrap_content"
         			android:layout_height="wrap_content" android:src="@drawable/about_icon"/>
         	</TableRow>
