@@ -39,7 +39,7 @@ import de.mastacode.http.Http;
 import net.sf.andhsli.SimpleCrypto;
 
 public class fNordeingangActivity extends Activity implements OnClickListener {
-	public static final String fNordSettingsFilename = "fNordAppSettingsTesting";
+	public static final String fNordSettingsFilename = "fNordAppSettingsTesting321";
 	public static final String fNordCryptoKey = "fNordAppTesting";
 	int requestCode;
     /** Called when the activity is first created. */
@@ -205,6 +205,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	
 	public void togglefNordStatusDialog() {
 		
 		int status = getfNordStatus();
@@ -236,9 +237,10 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 					password = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("password", null));
 				    } catch (Exception e) {
 				    	Log.v("Exception e", "Oh noes!");
-				    	print("Something went terribly wrong...");
+				    	print("Please enter username & password in settings!");
+				    	return;
 				    }
-		        if (username != null & username.length() != 0 | password.length() != 0 ) {
+		        if (username != null & username.length() != 0 & password.length() != 0 ) {
 					String tosend = "http://services.fnordeingang.de/services/api/status";
 					int Status;
 					// send toggle command to webserver
@@ -255,6 +257,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 					}
 		        } else {
 					print("Please enter username & password in settings!");
+					return;
 					}
 		        }
 		});

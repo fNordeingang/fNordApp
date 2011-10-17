@@ -30,7 +30,6 @@ import android.text.util.Linkify;
 import net.sf.andhsli.SimpleCrypto;
 
 public class fNordSettingsActivity extends Activity {
-
 	private EditText username;
 	private EditText password;
 	private String fNordCryptoKey = fNordeingangActivity.fNordCryptoKey;
@@ -51,47 +50,33 @@ public class fNordSettingsActivity extends Activity {
 		    }
         if (test != null) {
         	username.setText(test);
-        	password.setText("deinemama");
         }
 	}
 	public void savefNordSettings(View view) {
 		switch (view.getId()) {
 		case R.id.fNordSettingsSaveButton:
-			if (username.getText().length() == 0 | password.getText().length() == 0) {
+			if (username.getText().length() == 0 | password.getText().length() == 0 ) {
 				Toast.makeText(this, "Please enter Username and Password",
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 		    SharedPreferences settings = getSharedPreferences(fNordSettingsFilename, 0);
 		    SharedPreferences.Editor editor = settings.edit();
-			
+			    
+		    try {
+		    	editor.putString("username",SimpleCrypto.encrypt(fNordCryptoKey, username.getText().toString()));
+			    editor.putString("password",SimpleCrypto.encrypt(fNordCryptoKey, password.getText().toString()));
+			    editor.commit();
+			} catch (Exception e) {
+			   	Log.v("Exception e", "Oh noes!");
+			}
+
+		    Toast.makeText(this, "Settings saved.",
+					Toast.LENGTH_LONG).show();
 		    
-		    try {
-			editor.putString("username",SimpleCrypto.encrypt(fNordCryptoKey, username.getText().toString()));
-			editor.putString("password",SimpleCrypto.encrypt(fNordCryptoKey, password.getText().toString()));
-			editor.commit();
-		    } catch (Exception e) {
-		    	Log.v("Error!", "Exception e");
-		    }
-			// Debugging
-	    	String userdebug = "foo";
-	    	String passdebug = "bar";
-		    try {
-			userdebug = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("username", null));
-			passdebug = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("password", null));
-		    } catch (Exception e) {
-		    	Log.v("Exception e", "Oh noes!");
-		    }
-			String usercryptodebug = settings.getString("username", null);
-			String passcryptodebug = settings.getString("password", null);
-			Log.v("crypto Username: ", usercryptodebug);
-			Log.v("crypto Password: ", passcryptodebug);
-			Log.v("cleartext Username: ", userdebug);
-			Log.v("cleartext Password: ", passdebug);
 			setResult(1,new Intent());
-		    finish();
-			break;
+			finish();
+		    }
 		}
-		
-	}
-}
+}		
+
