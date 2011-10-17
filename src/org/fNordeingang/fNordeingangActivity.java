@@ -17,10 +17,6 @@ import android.content.Context;
 import android.view.View.OnClickListener;
 import android.content.Intent;
 import android.widget.TextView;
-import android.widget.EditText;
-import android.text.method.PasswordTransformationMethod;
-import android.text.InputType;
-import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
 
@@ -32,7 +28,6 @@ import org.apache.http.impl.client.*;
 import org.apache.http.client.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.HttpResponse;
 import de.mastacode.http.Http;
 
 //SimpleCrypto
@@ -58,10 +53,12 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         ImageButton doorButton = (ImageButton)findViewById(R.id.fNordDoor);
 		ImageButton statusButton = (ImageButton)findViewById(R.id.fNordStatus);
 		ImageButton settingsButton = (ImageButton)findViewById(R.id.fNordSettings);
+		ImageButton aboutButton = (ImageButton)findViewById(R.id.fNordAbout);
         tweetButton.setOnClickListener(this);
         doorButton.setOnClickListener(this);
 		statusButton.setOnClickListener(this);
 		settingsButton.setOnClickListener(this);
+		aboutButton.setOnClickListener(this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -77,25 +74,31 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     }
     
     public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.fNordTweet) {
+        switch (v.getId()) {
+        case R.id.fNordTweet:
             // start fNordTweet
             this.startActivity(new Intent(this, fNordTweetActivity.class));
-		} else if (id == R.id.fNordStatus) {
-			// Status Action
-			togglefNordStatusDialog();
-			
-        } else if (id == R.id.fNordDoor) {
-            // maybe in future
+            break;
+        case R.id.fNordStatus:
+        	togglefNordStatusDialog();
+        	break;
+        case R.id.fNordDoor:
+        	// maybe in future
             print("not yet implemented!");
-        } else if (id == R.id.fNordSettings) {
+            break;
+        case R.id.fNordSettings:
         	startActivityForResult(new Intent(this, fNordSettingsActivity.class), requestCode);
-        } else {
-            // Error here
+        	break;
+        case R.id.fNordAbout:
+        	// do fnordabout stuff here
+        	fNordAboutDialog();
+        	break;
+        default:
+        	// Error here
             print("Error: Unknown Button pressed!");
         }
     }
-
+    
 	public static int getfNordStatus() {
 		try {
 			// get json string
@@ -212,14 +215,17 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		updatefNordStatusLabel();
 		Log.v("Status:",Integer.toString(status));
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if (status == 1) { // open
+		switch (status) {
+		case 1:
 			builder.setMessage("Do you want to close?");
-		} else if (status == 0) { // closed
+			break;
+		case 0:
 			builder.setMessage("Do you want to open?");
-		} else if (status == -1) {
+			break;
+		case -1:
 			print("Error: IO or JSON Exception!");
 			return;
-		} else {
+		default:
 			print("Error: couldn't get fNordStatus");
 			return;
 		}
@@ -241,17 +247,20 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 				    	return;
 				    }
 		        if (username != null & username.length() != 0 & password.length() != 0 ) {
-					String tosend = "http://services.fnordeingang.de/services/api/status";
-					int Status;
+					int status;
 					// send toggle command to webserver
-					Status = setfNordStatus(username,password);
-					if (Status == 0) {
+					status = setfNordStatus(username,password);
+					switch (status){
+					case 0:
 						print("Wrong Password?");
-					} else if  (Status == -1) {
+						break;
+					case -1:
 						print("IO Exception!");
-					} else if (Status == -2) {
+						break;
+					case -2:
 						print("General Exception!");
-					} else {
+						break;
+					default:
 						print("fNordStatus successfully changed");
 						updatefNordStatusLabel();
 					}
@@ -279,7 +288,19 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		dialog.show();
 	}
 	
-	
+    public void fNordAboutDialog() {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	builder.setCancelable(false);
+    	builder.setMessage("App for the hackerspace fNordeingang");
+    	builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+    		public void onClick(DialogInterface dialog, int id) {
+    			dialog.cancel();
+    		}
+    	});
+    	AlertDialog dialog = builder.create();
+    	dialog.setTitle("about fNordApp");
+    	dialog.show();
+    }
 	
 	// helper function
 	void print(String input) {
