@@ -54,11 +54,17 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		ImageButton statusButton = (ImageButton)findViewById(R.id.fNordStatus);
 		ImageButton settingsButton = (ImageButton)findViewById(R.id.fNordSettings);
 		ImageButton aboutButton = (ImageButton)findViewById(R.id.fNordAbout);
+		ImageButton calendarButton = (ImageButton)findViewById(R.id.fNordCalendar);
+		ImageButton powerctrlButton = (ImageButton)findViewById(R.id.fNordPowerCtrl);
+		ImageButton cashButton = (ImageButton)findViewById(R.id.fNordCash);
         tweetButton.setOnClickListener(this);
         doorButton.setOnClickListener(this);
 		statusButton.setOnClickListener(this);
 		settingsButton.setOnClickListener(this);
 		aboutButton.setOnClickListener(this);
+		calendarButton.setOnClickListener(this);
+		powerctrlButton.setOnClickListener(this);
+		cashButton.setOnClickListener(this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -76,21 +82,35 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.fNordTweet:
-            // start fNordTweet
+        	// Launch tweet activity
             this.startActivity(new Intent(this, fNordTweetActivity.class));
             break;
+        case R.id.fNordDoor:
+        	// missing
+            print("not yet implemented!");
+            break;
         case R.id.fNordStatus:
+        	// Launch status dialog
         	togglefNordStatusDialog();
         	break;
-        case R.id.fNordDoor:
-        	// maybe in future
+        case R.id.fNordCalendar:
+        	// missing
+            print("not yet implemented!");
+            break;
+        case R.id.fNordPowerCtrl:
+        	// missing
+            print("not yet implemented!");
+            break;
+        case R.id.fNordCash:
+        	// missing
             print("not yet implemented!");
             break;
         case R.id.fNordSettings:
+        	// Launch settings activity
         	startActivityForResult(new Intent(this, fNordSettingsActivity.class), requestCode);
         	break;
         case R.id.fNordAbout:
-        	// do fnordabout stuff here
+        	// Launch about dialog
         	fNordAboutDialog();
         	break;
         default:
