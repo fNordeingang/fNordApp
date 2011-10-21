@@ -1,32 +1,28 @@
 package org.fNordeingang;
 
 // java
-import java.io.IOException;
-import java.io.File;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.widget.Toast;
+import de.mastacode.http.Http;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.BufferedOutputStream;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
 
 // android
-import android.content.Context;
-import android.widget.Toast;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.PackageInfo;
-import android.content.Context;
-import android.content.ContentResolver;
-import android.content.DialogInterface;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.os.Message;
-import android.os.Handler;
-
 // http
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.client.HttpClient;
-import de.mastacode.http.Http;
 
 public class CheckForUpdates {
 	
