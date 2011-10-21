@@ -18,14 +18,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.mastacode.http.Http;
 import net.sf.andhsli.SimpleCrypto;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.fNordeingang.util.ServiceClient;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.IOException;
 
@@ -104,8 +100,8 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
             break;
         case R.id.fNordCash:
         	// missing
-            print("not yet implemented!");
-            break;
+          fNordCashDialog();
+          break;
         case R.id.fNordSettings:
         	// Launch settings activity
         	startActivityForResult(new Intent(this, fNordSettingsActivity.class), requestCode);
@@ -122,13 +118,8 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 
 	public static int getfNordStatus() {
 		try {
-			// get json string
-			HttpClient client = new DefaultHttpClient();
-			String jsonstring = Http.get("http://services.fnordeingang.de/services/api/status").use(client).asString();
-
-			Log.v("Jsonstring",jsonstring);
 			// get status
-			JSONObject status = (JSONObject) new JSONTokener(jsonstring).nextValue();
+			JSONObject status = (new ServiceClient()).getJSON(ServiceClient.Service.STATUS);
 			status = status.getJSONObject("status");
 
 			if (status.getBoolean("open")) {
@@ -146,8 +137,19 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public static int setfNordStatus(final String username, final String password) {
-		return (new ServiceClient()).toggleStatus(username,password);
+  public static String getUserProfile(String username, String password) {
+    try {
+      // get status
+      JSONObject profile = (new ServiceClient()).getProfile(username, password);
+      return profile.getString("balance");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return "none";
+  }
+
+  public static int setfNordStatus(final String username, final String password) {
+		return (new ServiceClient()).toggleStatus(username, password);
 	}
 
 	// updates the fNordStatus label
@@ -292,6 +294,29 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     	dialog.setTitle("about fNordApp");
     	dialog.show();
     }
+
+  public void fNordCashDialog() {
+    SharedPreferences settings = getSharedPreferences(fNordSettingsFilename, 0);
+    String username = null;
+    String password = null;
+    try {
+      username = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("username", null));
+      password = SimpleCrypto.decrypt(fNordCryptoKey, settings.getString("password", null));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setCancelable(false);
+    builder.setMessage("your current balance is: "+getUserProfile(username, password));
+    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+        dialog.cancel();
+      }
+    });
+    AlertDialog dialog = builder.create();
+    dialog.setTitle("Profile");
+    dialog.show();
+  }
 
 	// helper function
 	void print(String input) {
