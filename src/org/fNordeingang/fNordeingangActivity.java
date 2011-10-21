@@ -1,37 +1,41 @@
 package org.fNordeingang;
 
 // java
-import java.io.*;
 
-// android
-import android.app.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.content.Context;
-import android.view.View.OnClickListener;
-import android.content.Intent;
 import android.widget.TextView;
-import android.os.Message;
-import android.os.Handler;
-
-// json
-import org.json.*;
-
-// http
-import org.apache.http.impl.client.*;
-import org.apache.http.client.*;
+import android.widget.Toast;
+import de.mastacode.http.Http;
+import net.sf.andhsli.SimpleCrypto;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import de.mastacode.http.Http;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.IOException;
+
+// android
+// json
+// http
 //SimpleCrypto
-import net.sf.andhsli.SimpleCrypto;
 
 public class fNordeingangActivity extends Activity implements OnClickListener {
 	public static final String fNordSettingsFilename = "fNordAppSettingsTesting321";
@@ -158,7 +162,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			httpost.setHeader("Accept", "application/json");
 			httpost.setHeader("Content-type", "application/json");
 
-			ResponseHandler responseHandler = new BasicResponseHandler();
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			String response = httpclient.execute(httpost, responseHandler);
 			Log.v("Response:",response);
 			

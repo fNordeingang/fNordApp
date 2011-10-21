@@ -1,33 +1,35 @@
 package org.fNordeingang;
 
 // java stuff
-import java.io.*;
-import java.util.*;
 
-// android stuff
 import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 import android.content.Context;
 import android.graphics.Color;
-import android.widget.TextView;
-import android.widget.TableLayout;
-import android.view.ViewGroup.LayoutParams;
+import android.os.Bundle;
 import android.text.util.Linkify;
-
-// SAX stuff
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import org.xml.sax.helpers.DefaultHandler;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import de.mastacode.http.Http;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.*;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Vector;
+
+// android stuff
+// SAX stuff
 // http
-import org.apache.http.impl.client.*;
-import org.apache.http.client.*;
-import de.mastacode.http.Http;
 
 public class fNordTweetActivity extends Activity {
     
