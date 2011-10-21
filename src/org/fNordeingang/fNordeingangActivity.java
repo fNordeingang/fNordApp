@@ -21,11 +21,8 @@ import android.widget.Toast;
 import de.mastacode.http.Http;
 import net.sf.andhsli.SimpleCrypto;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.fNordeingang.util.ServiceClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -46,13 +43,13 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-		
+
 		// check for updates
 		(new CheckForUpdates(this)).check();
-		
+
 		// update label of fNordStatus
 		updatefNordStatusLabel();
-        
+
         ImageButton tweetButton = (ImageButton)findViewById(R.id.fNordTweet);
         ImageButton doorButton = (ImageButton)findViewById(R.id.fNordDoor);
 		ImageButton statusButton = (ImageButton)findViewById(R.id.fNordStatus);
@@ -77,12 +74,12 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     	Log.v("resultCode: ", Integer.toString(resultCode));
     	super.onActivityResult(requestCode, resultCode, data);
         if ( resultCode == 1) {
-            
+
         	updatefNordStatusLabel();
-            
+
         }
     }
-    
+
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.fNordTweet:
@@ -122,18 +119,18 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
             print("Error: Unknown Button pressed!");
         }
     }
-    
+
 	public static int getfNordStatus() {
 		try {
 			// get json string
 			HttpClient client = new DefaultHttpClient();
 			String jsonstring = Http.get("http://services.fnordeingang.de/services/api/status").use(client).asString();
-			
+
 			Log.v("Jsonstring",jsonstring);
 			// get status
 			JSONObject status = (JSONObject) new JSONTokener(jsonstring).nextValue();
 			status = status.getJSONObject("status");
-			
+
 			if (status.getBoolean("open")) {
 				return 1; // open
 			} else {
@@ -148,47 +145,17 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			return -1;
 		}
 	}
-	
-	public static int setfNordStatus(final String username, final String password) {
-		try {
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpost = new HttpPost("http://services.fnordeingang.de/services/api/status");
-			
-			JSONObject userdata = new JSONObject().put("username", username).put("password", password);
-			Log.v("Data:",userdata.toString());	
-			StringEntity se = new StringEntity(userdata.toString());
-			
-			httpost.setEntity(se);
-			httpost.setHeader("Accept", "application/json");
-			httpost.setHeader("Content-type", "application/json");
 
-			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			String response = httpclient.execute(httpost, responseHandler);
-			Log.v("Response:",response);
-			
-			// if this throws a JSONException - no json object returned
-			// => maybe wrong password
-			JSONObject status = new JSONObject(response);
-			
-		} catch (IOException ioe) {
-			Log.v("IOE: ", ioe.toString());
-			return -1;
-		} catch (JSONException jsone) {
-			Log.v("JSONe: ", jsone.toString());
-			return 0;
-		} catch (Exception e) {
-			Log.v("e: ", e.toString());
-			return -2;
-		}
-		return 1;
+	public static int setfNordStatus(final String username, final String password) {
+		return (new ServiceClient()).toggleStatus(username,password);
 	}
-	
+
 	// updates the fNordStatus label
 	public void updatefNordStatusLabel() {
 		updatefNordStatusLabelThread ufslt = new updatefNordStatusLabelThread(updatefNordStatusLabelHandler);
 		ufslt.start();
 	}
-	
+
     final Handler updatefNordStatusLabelHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			int status = msg.getData().getInt("status");
@@ -213,28 +180,28 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 
 	private class updatefNordStatusLabelThread extends Thread {
 		Handler handler;
-		
+
 		updatefNordStatusLabelThread(Handler h) {
 			handler = h;
 		}
-		
+
 		public void run() {
 			// get status
 			int status = getfNordStatus();
-			
+
 			// send status to main thread
 			Message msg = handler.obtainMessage();
 			Bundle b = new Bundle();
 			b.putInt("status", status);
 			msg.setData(b);
 			handler.sendMessage(msg);
-			
+
 		}
 	}
-	
-	
+
+
 	public void togglefNordStatusDialog() {
-		
+
 		int status = getfNordStatus();
 		updatefNordStatusLabel();
 		Log.v("Status:",Integer.toString(status));
@@ -253,9 +220,9 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 			print("Error: couldn't get fNordStatus");
 			return;
 		}
-		
+
 		builder.setCancelable(false);
-		
+
 		// toggle fNordStatus at yes
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -294,24 +261,24 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
 					}
 		        }
 		});
-		
+
 		// cancel dialog at no
 		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		});
-		
+
 		AlertDialog dialog = builder.create();
 		if (status == 1) { // open
 			dialog.setTitle("fnord is open");
 		} else if (status == 0) { // closed
 			dialog.setTitle("fnord is closed");
 		}
-		
+
 		dialog.show();
 	}
-	
+
     public void fNordAboutDialog() {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setCancelable(false);
@@ -325,13 +292,13 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     	dialog.setTitle("about fNordApp");
     	dialog.show();
     }
-	
+
 	// helper function
 	void print(String input) {
         Context context = getApplicationContext();
         CharSequence text = input;
         int duration = Toast.LENGTH_SHORT;
-		
+
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
