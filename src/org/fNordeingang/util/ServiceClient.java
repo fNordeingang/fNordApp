@@ -121,16 +121,19 @@ public class ServiceClient {
 
       eanArticle.setEan(ean);
       eanArticle.setName(eanJson.getString("name"));
-      eanArticle.setDescription(eanJson.getString("description"));
-      eanArticle.setPrice(BigDecimal.valueOf(eanJson.getDouble("price")));
-
-      if(eanArticle.getName() != null && !"".equals(eanArticle.getName())) {
-        eanArticle.setFound(true);
+      try{
+        eanArticle.setDescription(eanJson.getString("description"));
+      } catch (Throwable th) {
+        th.printStackTrace();
       }
+      eanArticle.setPrice(BigDecimal.valueOf(eanJson.getDouble("price")));
     } catch(JSONException e) {
       e.printStackTrace();
     } catch(IOException e) {
       e.printStackTrace();
+    }
+    if(eanArticle.getName() != null && !"".equals(eanArticle.getName())) {
+      eanArticle.setFound(true);
     }
     return eanArticle;
   }
