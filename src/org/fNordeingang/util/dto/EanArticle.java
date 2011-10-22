@@ -9,9 +9,18 @@ import java.math.BigDecimal;
  */
 public class EanArticle {
   String name;
+  String description;
   String ean;
   BigDecimal price;
   Boolean found = false;
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
   public String getEan() {
     return ean;

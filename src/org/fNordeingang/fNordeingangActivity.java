@@ -79,8 +79,13 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         Log.w("code: ", result.getContents());
         Log.w("format: ", result.getFormat());
-        EanArticle eanArticle = (new ServiceClient()).getArticleInfo(result.getContents());
-        articleDialog(eanArticle.getName());
+        ServiceClient client = new ServiceClient();
+        EanArticle eanArticle = client.getArticleInfo(result.getContents());
+        if(eanArticle.isFound()) {
+          articleDialog(eanArticle.getName());
+        } else {
+          articleDialog("not found...");
+        }
       } catch(Throwable e) {
         e.printStackTrace();
       }

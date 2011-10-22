@@ -12,7 +12,6 @@ import org.fNordeingang.util.dto.EanArticle;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,19 +25,34 @@ import java.util.Map;
  */
 public class ServiceClient {
   DefaultHttpClient httpclient = new DefaultHttpClient();
+  String serviceHost = "services.fnordeingang.de";
 
   public enum Service {
     STATUS,
     PROFILE,
-    CART, EAN
+    CART,
+    EAN
   }
   Map<Service, String> services = new HashMap<Service, String>();
 
   public ServiceClient() {
+    init();
+  }
+
+  private void init() {
     services.put(Service.STATUS,"/status");
     services.put(Service.PROFILE,"/userCard/profile");
-    services.put(Service.EAN,"/openean/");
+    services.put(Service.EAN,"/article/");
     services.put(Service.CART,"/cart");
+  }
+
+  public ServiceClient(String serviceHost) {
+    this.serviceHost = serviceHost;
+    init();
+  }
+
+  public String getServiceHost() {
+    return serviceHost;
   }
 
   public String getUrl(Service service) {
@@ -46,14 +60,14 @@ public class ServiceClient {
   }
 
   public String getUrl(Service service, String params) {
-    String serviceUrl = "http://services.fnordeingang.de/services/api";
+    String serviceUrl = "http://"+serviceHost+"/services/api";
     return serviceUrl + services.get(service) + params;
   }
 
   public JSONObject getJSON(Service service, String params) throws JSONException, IOException {
     String jsonstring = Http.get(getUrl(service,params)).use(httpclient).asString();
     Log.v("Jsonstring",jsonstring);
-    return (JSONObject) new JSONTokener(jsonstring).nextValue();
+    return new JSONObject(jsonstring);
   }
 
   public JSONObject getJSON(Service service) throws JSONException, IOException {
@@ -102,10 +116,14 @@ public class ServiceClient {
   public EanArticle getArticleInfo(String ean) {
     EanArticle eanArticle = new EanArticle();
     try {
-      JSONObject eanJson = getJSON(Service.EAN,ean).getJSONObject("eanArticle");
+      JSONObject eanJson = getJSON(Service.EAN, ean);
+      eanJson = eanJson.getJSONObject("article");
+
       eanArticle.setEan(ean);
-      eanArticle.setName(eanJson.getString("detailname"));
+      eanArticle.setName(eanJson.getString("name"));
+      eanArticle.setDescription(eanJson.getString("description"));
       eanArticle.setPrice(BigDecimal.valueOf(eanJson.getDouble("price")));
+
       if(eanArticle.getName() != null && !"".equals(eanArticle.getName())) {
         eanArticle.setFound(true);
       }
@@ -120,13 +138,15 @@ public class ServiceClient {
   public Cart getCurrentCart() {
     Cart cart = new Cart();
     try{
-      JSONObject o = getJSON(Service.CART);
+      JSONObject o = getJSON(Service.CART).getJSONObject("cart");
       JSONArray oar = o.getJSONArray("articles");
       for(int i = 0; i < oar.length(); i++) {
         JSONObject artJSON = oar.getJSONObject(i);
         EanArticle article = new EanArticle();
         article.setEan(artJSON.getString("ean"));
-        article.setName(artJSON.getString("detailname"));
+        article.setName(artJSON.getString("name"));
+        article.setDescription(artJSON.getString("description"));
+        cart.addArticle(article);
       }
     }catch (Throwable th) {
       th.printStackTrace();
@@ -135,7 +155,12 @@ public class ServiceClient {
   }
 
   public Cart addArticleToCart(EanArticle article) {
-
+    try{
+      JSONObject userdata = new JSONObject().put("ean", article.getEan());
+      postJSON(Service.CART, userdata);
+    }catch (Throwable th) {
+      th.printStackTrace();
+    }
     return getCurrentCart();
   }
 
