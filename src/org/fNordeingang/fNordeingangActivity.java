@@ -74,12 +74,12 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     Log.w("requestCode: ", Integer.toString(requestCode));
     Log.w("resultCode: ", Integer.toString(resultCode));
     if(requestCode == IntentIntegrator.REQUEST_CODE) {
-      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-      Log.w("code: ", result.getContents());
-      Log.w("format: ", result.getFormat());
       try {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Log.w("code: ", result.getContents());
+        Log.w("format: ", result.getFormat());
         articleDialog((new ServiceClient()).getArticleInfo(result.getContents()).getJSONObject("eanArticle").getString("detailname"));
-      } catch(JSONException e) {
+      } catch(Throwable e) {
         e.printStackTrace();
       }
     }
