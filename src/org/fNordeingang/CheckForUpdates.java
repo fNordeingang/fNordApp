@@ -111,7 +111,7 @@ public class CheckForUpdates {
 						// download url of latest version
 						try {
 							HttpClient client = new DefaultHttpClient();
-							String latestURL = Http.get("https://raw.github.com/fNordeingang/fNordApp/master/bin").use(client).asString();
+							String latestURL = Http.get("https://raw.github.com/fNordeingang/fNordApp/master/bin/fNordApp.apk").use(client).asString();
 
 							// if there is a previous file - delete it
 							File apk = new File(context.getExternalFilesDir(null), "fNordApp.apk");

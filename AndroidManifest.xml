@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.fNordeingang"
-      android:versionCode="17" android:versionName="Beta 0.18" android:installLocation="auto">
+      android:versionCode="18" android:versionName="Beta 0.18" android:installLocation="auto">
       <uses-permission android:name="android.permission.INTERNET" />
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
         <activity android:name=".fNordeingangActivity"
