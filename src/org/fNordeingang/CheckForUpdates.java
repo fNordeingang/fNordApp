@@ -73,7 +73,7 @@ public class CheckForUpdates {
 			try {
 				// get version from server
 				HttpClient client = new DefaultHttpClient();
-				int serverVersion = Integer.parseInt(Http.get("http://dl.dropbox.com/u/1711476/fNordeingang/fNordApp/latest").use(client).asString().trim());
+				int serverVersion = Integer.parseInt(Http.get("https://raw.github.com/fNordeingang/fNordApp/master/latest").use(client).asString().trim());
 
 				// send version to main thread
 				Message msg = handler.obtainMessage();
