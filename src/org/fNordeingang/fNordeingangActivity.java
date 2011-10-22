@@ -18,7 +18,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.zxing.integration.android.IntentIntegrator;
 import net.sf.andhsli.SimpleCrypto;
+import org.fNordeingang.util.CommonUtils;
 import org.fNordeingang.util.ServiceClient;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,7 +101,8 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         break;
       case R.id.fNordPowerCtrl:
         // missing
-        print("not yet implemented!");
+        IntentIntegrator.initiateScan(this);
+        //print("not yet implemented!");
         break;
       case R.id.fNordCash:
         // missing
@@ -140,10 +143,10 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     }
   }
 
-  public static String getUserProfile(String username, String password) {
+  public String getUserProfile(String username, String password) {
     try {
       // get status
-      JSONObject profile = (new ServiceClient()).getProfile(username, password);
+      JSONObject profile = (new ServiceClient()).getProfile(username, password, CommonUtils.getDeviceUUID(getBaseContext(),getContentResolver()));
       return profile.getString("balance");
     } catch(JSONException e) {
       e.printStackTrace();
