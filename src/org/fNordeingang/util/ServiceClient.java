@@ -25,24 +25,34 @@ public class ServiceClient {
 
   public enum Service {
     STATUS,
-    PROFILE
+    PROFILE,
+    EAN
   }
   Map<Service, String> services = new HashMap<Service, String>();
 
   public ServiceClient() {
     services.put(Service.STATUS,"/status");
     services.put(Service.PROFILE,"/userCard/profile");
+    services.put(Service.EAN,"/openean/");
   }
 
   public String getUrl(Service service) {
+    return getUrl(service,"");
+  }
+
+  public String getUrl(Service service, String params) {
     String serviceUrl = "http://services.fnordeingang.de/services/api";
-    return serviceUrl + services.get(service);
+    return serviceUrl + services.get(service) + params;
+  }
+
+  public JSONObject getJSON(Service service, String params) throws JSONException, IOException {
+    String jsonstring = Http.get(getUrl(service,params)).use(httpclient).asString();
+    Log.v("Jsonstring",jsonstring);
+    return (JSONObject) new JSONTokener(jsonstring).nextValue();
   }
 
   public JSONObject getJSON(Service service) throws JSONException, IOException {
-    String jsonstring = Http.get(getUrl(service)).use(httpclient).asString();
-    Log.v("Jsonstring",jsonstring);
-    return (JSONObject) new JSONTokener(jsonstring).nextValue();
+    return getJSON(service,"");
   }
 
   public JSONObject postJSON(Service service, JSONObject data) throws IOException, JSONException {
@@ -82,6 +92,17 @@ public class ServiceClient {
       return -2;
     }
     return 1;
+  }
+
+  public JSONObject getArticleInfo(String ean) {
+    try {
+      return getJSON(Service.EAN,ean);
+    } catch(JSONException e) {
+      e.printStackTrace();
+    } catch(IOException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public JSONObject getProfile(final String username, final String password, String deviceId) {
