@@ -7,11 +7,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.fNordeingang.util.dto.Cart;
+import org.fNordeingang.util.dto.EanArticle;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +30,7 @@ public class ServiceClient {
   public enum Service {
     STATUS,
     PROFILE,
-    EAN
+    CART, EAN
   }
   Map<Service, String> services = new HashMap<Service, String>();
 
@@ -34,6 +38,7 @@ public class ServiceClient {
     services.put(Service.STATUS,"/status");
     services.put(Service.PROFILE,"/userCard/profile");
     services.put(Service.EAN,"/openean/");
+    services.put(Service.CART,"/cart");
   }
 
   public String getUrl(Service service) {
@@ -94,15 +99,44 @@ public class ServiceClient {
     return 1;
   }
 
-  public JSONObject getArticleInfo(String ean) {
+  public EanArticle getArticleInfo(String ean) {
+    EanArticle eanArticle = new EanArticle();
     try {
-      return getJSON(Service.EAN,ean);
+      JSONObject eanJson = getJSON(Service.EAN,ean).getJSONObject("eanArticle");
+      eanArticle.setEan(ean);
+      eanArticle.setName(eanJson.getString("detailname"));
+      eanArticle.setPrice(BigDecimal.valueOf(eanJson.getDouble("price")));
+      if(eanArticle.getName() != null && !"".equals(eanArticle.getName())) {
+        eanArticle.setFound(true);
+      }
     } catch(JSONException e) {
       e.printStackTrace();
     } catch(IOException e) {
       e.printStackTrace();
     }
-    return null;
+    return eanArticle;
+  }
+
+  public Cart getCurrentCart() {
+    Cart cart = new Cart();
+    try{
+      JSONObject o = getJSON(Service.CART);
+      JSONArray oar = o.getJSONArray("articles");
+      for(int i = 0; i < oar.length(); i++) {
+        JSONObject artJSON = oar.getJSONObject(i);
+        EanArticle article = new EanArticle();
+        article.setEan(artJSON.getString("ean"));
+        article.setName(artJSON.getString("detailname"));
+      }
+    }catch (Throwable th) {
+      th.printStackTrace();
+    }
+    return cart;
+  }
+
+  public Cart addArticleToCart(EanArticle article) {
+
+    return getCurrentCart();
   }
 
   public JSONObject getProfile(final String username, final String password, String deviceId) {

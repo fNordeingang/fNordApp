@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.fNordeingang"
-      android:versionCode="18" android:versionName="Beta 0.18" android:installLocation="auto">
-      <uses-permission android:name="android.permission.INTERNET" />
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
-        <activity android:name=".fNordeingangActivity"
-                  android:label="@string/app_name"
-                  android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+          package="org.fNordeingang"
+          android:versionCode="18" android:versionName="Beta 0.18" android:installLocation="auto">
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+    <activity android:name=".fNordeingangActivity"
+              android:label="@string/app_name"
+              android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
 
-    <activity android:name="fNordTweetActivity"></activity>
-    <activity android:name="fNordSettingsActivity"></activity>
-</application>
+    <activity android:name="fNordTweetActivity"/>
+    <activity android:name="fNordSettingsActivity"/>
+    <uses-library android:name="android.test.runner" />
+  </application>
+  <uses-sdk android:minSdkVersion="3" />
 
-
-
-
+  <instrumentation android:name="android.test.InstrumentationTestRunner"
+         android:targetPackage="org.fNordeingang" android:label="Tests for fNordApp" />
 </manifest>
