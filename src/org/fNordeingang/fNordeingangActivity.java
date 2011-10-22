@@ -46,9 +46,6 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    // check for updates
-    (new CheckForUpdates(this)).check();
-
     // update label of fNordStatus
     updatefNordStatusLabel();
 
