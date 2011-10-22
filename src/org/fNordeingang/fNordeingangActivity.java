@@ -23,6 +23,7 @@ import com.google.zxing.integration.android.IntentResult;
 import net.sf.andhsli.SimpleCrypto;
 import org.fNordeingang.util.CommonUtils;
 import org.fNordeingang.util.ServiceClient;
+import org.fNordeingang.util.dto.EanArticle;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,7 +79,8 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         Log.w("code: ", result.getContents());
         Log.w("format: ", result.getFormat());
-        articleDialog((new ServiceClient()).getArticleInfo(result.getContents()).getJSONObject("eanArticle").getString("detailname"));
+        EanArticle eanArticle = (new ServiceClient()).getArticleInfo(result.getContents());
+        articleDialog(eanArticle.getName());
       } catch(Throwable e) {
         e.printStackTrace();
       }
