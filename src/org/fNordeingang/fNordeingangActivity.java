@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import net.sf.andhsli.SimpleCrypto;
 import org.fNordeingang.util.CommonUtils;
 import org.fNordeingang.util.ServiceClient;
@@ -72,12 +73,21 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     // If the request went well (OK) and the request was PICK_CONTACT_REQUEST
-    Log.v("requestCode: ", Integer.toString(requestCode));
-    Log.v("resultCode: ", Integer.toString(resultCode));
     super.onActivityResult(requestCode, resultCode, data);
+    Log.w("requestCode: ", Integer.toString(requestCode));
+    Log.w("resultCode: ", Integer.toString(resultCode));
+    if(requestCode == IntentIntegrator.REQUEST_CODE) {
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      Log.w("code: ", result.getContents());
+      Log.w("format: ", result.getFormat());
+      try {
+        articleDialog((new ServiceClient()).getArticleInfo(result.getContents()).getJSONObject("eanArticle").getString("detailname"));
+      } catch(JSONException e) {
+        e.printStackTrace();
+      }
+    }
     if(resultCode == 1) {
       updatefNordStatusLabel();
-
     }
   }
 
@@ -207,7 +217,6 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     }
   }
 
-
   public void togglefNordStatusDialog() {
     int status = getfNordStatus();
     updatefNordStatusLabel();
@@ -298,6 +307,20 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     dialog.setTitle("about fNordApp");
     dialog.show();
   }
+
+  public void articleDialog(String name) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setCancelable(false);
+      builder.setMessage("Article: "+name);
+      builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+          dialog.cancel();
+        }
+      });
+      AlertDialog dialog = builder.create();
+      dialog.setTitle("Article info");
+      dialog.show();
+    }
 
   public void fNordCashDialog() {
     SharedPreferences settings = getSharedPreferences(fNordSettingsFilename, 0);
