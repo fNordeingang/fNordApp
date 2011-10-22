@@ -108,7 +108,7 @@ public class ServiceClient {
   public JSONObject getProfile(final String username, final String password, String deviceId) {
     JSONObject userdata = null;
     try {
-      userdata = new JSONObject().put("username", username).put("password", password).put("deviceId",deviceId);
+      userdata = new JSONObject().put("username", username).put("password", password);
       Log.v("Data:", userdata.toString());
       return postJSON(Service.PROFILE, userdata);
     } catch (IOException ioe) {
