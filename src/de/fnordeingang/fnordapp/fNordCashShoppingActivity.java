@@ -18,6 +18,6 @@ public class fNordCashShoppingActivity extends Activity implements View.OnClickL
     }
     @Override
     public void onClick(View view) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 }

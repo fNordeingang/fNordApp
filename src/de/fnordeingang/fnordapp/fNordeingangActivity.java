@@ -18,7 +18,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import de.fnordeingang.fnordapp.util.CommonUtils;
 import de.fnordeingang.fnordapp.util.ServiceClient;
+import de.fnordeingang.fnordapp.util.dto.EanArticle;
+import net.sf.andhsli.SimpleCrypto;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -156,7 +161,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
   public String getUserProfile(String username, String password) {
     try {
       // get status
-      JSONObject profile = (new ServiceClient()).getProfile(username, password, CommonUtils.getDeviceUUID(getBaseContext(),getContentResolver()));
+      JSONObject profile = (new ServiceClient()).getProfile(username, password, CommonUtils.getDeviceUUID(getBaseContext(), getContentResolver()));
       return profile.getString("balance");
     } catch(JSONException e) {
       e.printStackTrace();
