@@ -15,7 +15,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +33,7 @@ public class ServiceClient {
     STATUS,
     PROFILE,
     CART,
-    EAN
+    EAN_ALL, EAN
   }
   Map<Service, String> services = new HashMap<Service, String>();
 
@@ -43,6 +45,7 @@ public class ServiceClient {
     services.put(Service.STATUS,"/status");
     services.put(Service.PROFILE,"/userCard/profile");
     services.put(Service.EAN,"/article/");
+    services.put(Service.EAN_ALL,"/article/all");
     services.put(Service.CART,"/cart");
   }
 
@@ -64,15 +67,50 @@ public class ServiceClient {
     return serviceUrl + services.get(service) + params;
   }
 
-  public JSONObject getJSON(Service service, String params) throws JSONException, IOException {
-    String jsonstring = Http.get(getUrl(service,params)).use(httpclient).asString();
+  public String getJSON(Service service, String params) {
+    String jsonstring = null;
+    try {
+      jsonstring = Http.get(getUrl(service, params)).use(httpclient).asString();
+    } catch(IOException e) {
+      e.printStackTrace();
+    }
     Log.v("Jsonstring",jsonstring);
-    return new JSONObject(jsonstring);
+    return jsonstring;
   }
 
-  public JSONObject getJSON(Service service) throws JSONException, IOException {
+  public String getJSON(Service service) {
     return getJSON(service,"");
   }
+
+  public JSONObject getJSONObject(Service service) {
+    return getJSONObject(getJSON(service));
+  }
+
+  public JSONObject getJSONObject(Service service, String params) {
+     return getJSONObject(getJSON(service,params));
+   }
+
+  public JSONObject getJSONObject(String json) {
+    try {
+      return new JSONObject(json);
+    } catch(JSONException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public JSONArray getJSONArray(Service service) {
+    return getJSONArray(getJSON(service));
+  }
+
+  public JSONArray getJSONArray(String json) {
+      try {
+        return new JSONArray(json);
+      } catch(JSONException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
 
   public JSONObject postJSON(Service service, JSONObject data) throws IOException, JSONException {
     HttpPost httpost = new HttpPost(getUrl(service));
@@ -116,7 +154,7 @@ public class ServiceClient {
   public EanArticle getArticleInfo(String ean) {
     EanArticle eanArticle = new EanArticle();
     try {
-      JSONObject eanJson = getJSON(Service.EAN, ean);
+      JSONObject eanJson = getJSONObject(Service.EAN, ean);
       eanJson = eanJson.getJSONObject("article");
 
       eanArticle.setEan(ean);
@@ -129,8 +167,6 @@ public class ServiceClient {
       eanArticle.setPrice(BigDecimal.valueOf(eanJson.getDouble("price")));
     } catch(JSONException e) {
       e.printStackTrace();
-    } catch(IOException e) {
-      e.printStackTrace();
     }
     if(eanArticle.getName() != null && !"".equals(eanArticle.getName())) {
       eanArticle.setFound(true);
@@ -141,20 +177,25 @@ public class ServiceClient {
   public Cart getCurrentCart() {
     Cart cart = new Cart();
     try{
-      JSONObject o = getJSON(Service.CART).getJSONObject("cart");
+      JSONObject o = getJSONObject(Service.CART).getJSONObject("cart");
       JSONArray oar = o.getJSONArray("articles");
       for(int i = 0; i < oar.length(); i++) {
         JSONObject artJSON = oar.getJSONObject(i);
-        EanArticle article = new EanArticle();
-        article.setEan(artJSON.getString("ean"));
-        article.setName(artJSON.getString("name"));
-        article.setDescription(artJSON.getString("description"));
+        EanArticle article = jsonToArticle(artJSON);
         cart.addArticle(article);
       }
     }catch (Throwable th) {
       th.printStackTrace();
     }
     return cart;
+  }
+
+  private EanArticle jsonToArticle(JSONObject artJSON) throws JSONException {
+    EanArticle article = new EanArticle();
+    article.setEan(artJSON.getString("ean"));
+    article.setName(artJSON.getString("name"));
+    article.setDescription(artJSON.getString("description"));
+    return article;
   }
 
   public Cart addArticleToCart(EanArticle article) {
@@ -165,6 +206,19 @@ public class ServiceClient {
       th.printStackTrace();
     }
     return getCurrentCart();
+  }
+
+  public List<EanArticle> getAllArticles() {
+    List<EanArticle> articles = new ArrayList<EanArticle>();
+    try {
+      JSONArray articlesArray = getJSONObject(Service.EAN_ALL).getJSONArray("article");
+      for(int i = 0; i < articlesArray.length(); i++) {
+        articles.add(jsonToArticle(articlesArray.getJSONObject(i)));
+      }
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+    return articles;
   }
 
   public JSONObject getProfile(final String username, final String password, String deviceId) {

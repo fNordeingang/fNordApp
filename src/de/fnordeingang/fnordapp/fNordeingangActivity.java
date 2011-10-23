@@ -27,8 +27,6 @@ import net.sf.andhsli.SimpleCrypto;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 // android
 // json
 // http
@@ -140,7 +138,7 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
   public static int getfNordStatus() {
     try {
       // get status
-      JSONObject status = (new ServiceClient()).getJSON(ServiceClient.Service.STATUS);
+      JSONObject status = (new ServiceClient()).getJSONObject(ServiceClient.Service.STATUS);
       status = status.getJSONObject("status");
 
       if(status.getBoolean("open")) {
@@ -149,9 +147,6 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         return 0; // closed
       }
 
-    } catch(IOException ioe) {
-      Log.v("IOE", ioe.toString());
-      return -1;
     } catch(JSONException jsone) {
       Log.v("Json", jsone.toString());
       return -1;

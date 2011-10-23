@@ -1,10 +1,12 @@
 package de.fnordeingang.fnordapp.test;
 
 import android.test.AndroidTestCase;
-import junit.framework.Assert;
 import de.fnordeingang.fnordapp.util.ServiceClient;
 import de.fnordeingang.fnordapp.util.dto.Cart;
 import de.fnordeingang.fnordapp.util.dto.EanArticle;
+import junit.framework.Assert;
+
+import java.util.List;
 
 /**
  * User: vileda
@@ -26,5 +28,11 @@ public class ServiceClientTest extends AndroidTestCase {
     Cart cart = client.getCurrentCart();
     Assert.assertTrue("cart size is greater 0", cart.getArticles().size() > 0);
     Assert.assertTrue("first cart item is the one we searched for","Zigarettendrehpapier".equals(cart.getArticle(0).getDescription()));
+  }
+
+  public void testGetAllArticles() throws Exception {
+    ServiceClient client = new ServiceClient();
+    List<EanArticle> articles = client.getAllArticles();
+    Assert.assertTrue("there are more than zero articles in the list", articles.size() > 0);
   }
 }
