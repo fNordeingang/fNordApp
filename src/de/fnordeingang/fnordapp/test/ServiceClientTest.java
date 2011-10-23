@@ -14,8 +14,8 @@ import java.util.List;
  * Time: 23:10
  */
 public class ServiceClientTest extends AndroidTestCase {
-  private static final String HOST = "172.29.1.47:8080";
-  //private static final String HOST = "services.fnordeingang.de";
+  //private static final String HOST = "172.29.1.47:8080";
+  private static final String HOST = "services.fnordeingang.de";
 
   public void testGetArticleInfo() throws Exception {
     ServiceClient client = new ServiceClient(HOST);
