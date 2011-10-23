@@ -16,7 +16,7 @@ public class fNordCashActivity extends TabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.fnordcash);
         mTabHost = getTabHost();
 
         mTabHost.addTab(mTabHost.newTabSpec("AccountTab").setIndicator("Account").setContent(new Intent(this, fNordCashAccountActivity.class)));
