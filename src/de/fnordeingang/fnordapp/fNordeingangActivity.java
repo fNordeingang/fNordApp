@@ -1,4 +1,4 @@
-package org.fNordeingang;
+package de.fnordeingang.fnordapp;
 
 // java
 
@@ -20,10 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import net.sf.andhsli.SimpleCrypto;
-import org.fNordeingang.util.CommonUtils;
-import org.fNordeingang.util.ServiceClient;
-import org.fNordeingang.util.dto.EanArticle;
 import org.json.JSONException;
 import org.json.JSONObject;
 

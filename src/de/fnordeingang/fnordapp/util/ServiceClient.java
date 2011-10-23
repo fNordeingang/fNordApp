@@ -1,14 +1,14 @@
-package org.fNordeingang.util;
+package de.fnordeingang.fnordapp.util;
 
 import android.util.Log;
+import de.fnordeingang.fnordapp.util.dto.Cart;
+import de.fnordeingang.fnordapp.util.dto.EanArticle;
 import de.mastacode.http.Http;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.fNordeingang.util.dto.Cart;
-import org.fNordeingang.util.dto.EanArticle;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

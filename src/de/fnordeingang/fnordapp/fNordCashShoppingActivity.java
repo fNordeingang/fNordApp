@@ -1,26 +1,21 @@
-package org.fNordeingang;
+package de.fnordeingang.fnordapp;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import net.sf.andhsli.SimpleCrypto;
 
 /*
  * User: Linus
  * Date: 23.10.11
- * Time: 02:26
+ * Time: 03:10
  */
-public class fNordCashAccountActivity extends Activity implements View.OnClickListener {
+public class fNordCashShoppingActivity extends Activity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fnordcashaccount);
+        setContentView(R.layout.fnordcashshopping);
 
     }
-
     @Override
     public void onClick(View view) {
         //To change body of implemented methods use File | Settings | File Templates.

@@ -1,4 +1,4 @@
-package org.fNordeingang.test;
+package de.fnordeingang.fnordapp.test;
 
 import android.test.suitebuilder.TestSuiteBuilder;
 import junit.framework.Test;

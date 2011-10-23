@@ -1,4 +1,4 @@
-package org.fNordeingang.util.dto;
+package de.fnordeingang.fnordapp.util.dto;
 
 import java.util.ArrayList;
 

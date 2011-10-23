@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.fNordeingang"
+          package="de.fnordeingang.fnordapp"
           android:versionCode="18" android:versionName="Beta 0.18" android:installLocation="auto">
   <uses-permission android:name="android.permission.INTERNET"/>
   <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
-    <activity android:name=".fNordeingangActivity"
+    <activity android:name="de.fnordeingang.fnordapp.fNordeingangActivity"
               android:label="@string/app_name"
               android:screenOrientation="portrait">
       <intent-filter>
@@ -13,16 +13,16 @@
       </intent-filter>
     </activity>
 
-    <activity android:name="fNordTweetActivity"/>
-    <activity android:name="fNordSettingsActivity"/>
-    <activity android:name="fNordCashActivity"/>
-    <activity android:name="fNordCashAccountActivity"/>
-    <activity android:name="fNordCashShoppingActivity"/>
-    <activity android:name="fNordCashShopcartActivity"/>
+    <activity android:name="de.fnordeingang.fnordapp.fNordTweetActivity"/>
+    <activity android:name="de.fnordeingang.fnordapp.fNordSettingsActivity"/>
+    <activity android:name="de.fnordeingang.fnordapp.fNordCashActivity"/>
+    <activity android:name="de.fnordeingang.fnordapp.fNordCashAccountActivity"/>
+    <activity android:name="de.fnordeingang.fnordapp.fNordCashShoppingActivity"/>
+    <activity android:name="de.fnordeingang.fnordapp.fNordCashShopcartActivity"/>
     <uses-library android:name="android.test.runner" />
   </application>
   <uses-sdk android:minSdkVersion="3" />
 
   <instrumentation android:name="android.test.InstrumentationTestRunner"
-         android:targetPackage="org.fNordeingang" android:label="Tests for fNordApp" />
+         android:targetPackage="de.fnordeingang.fnordapp" android:label="Tests for fNordApp" />
 </manifest>

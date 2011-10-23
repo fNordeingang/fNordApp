@@ -1,4 +1,4 @@
-package org.fNordeingang.util;
+package de.fnordeingang.fnordapp.util;
 
 import android.content.ContentResolver;
 import android.content.Context;

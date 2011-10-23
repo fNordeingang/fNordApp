@@ -1,4 +1,4 @@
-package org.fNordeingang;
+package de.fnordeingang.fnordapp;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -16,7 +16,7 @@ public class fNordCashActivity extends TabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fnordcash);
+        //setContentView(R.layout.fnordcash);
 
         mTabHost = getTabHost();
 
