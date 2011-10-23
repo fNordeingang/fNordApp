@@ -5,6 +5,7 @@ import de.fnordeingang.fnordapp.util.dto.Cart;
 import de.fnordeingang.fnordapp.util.dto.EanArticle;
 import de.mastacode.http.Http;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -74,7 +75,7 @@ public class ServiceClient {
     } catch(IOException e) {
       e.printStackTrace();
     }
-    Log.v("Jsonstring",jsonstring);
+    Log.v("get "+service.toString()+" response: ",jsonstring);
     return jsonstring;
   }
 
@@ -114,7 +115,7 @@ public class ServiceClient {
 
   public JSONObject postJSON(Service service, JSONObject data) throws IOException, JSONException {
     HttpPost httpost = new HttpPost(getUrl(service));
-    Log.v("Data:", data.toString());
+    Log.v("post Data:", data.toString());
     StringEntity se = new StringEntity(data.toString());
 
     httpost.setEntity(se);
@@ -122,21 +123,54 @@ public class ServiceClient {
     httpost.setHeader("Content-type", "application/json");
 
     ResponseHandler<String> responseHandler = new BasicResponseHandler();
+    String response = httpclient.execute(httpost, responseHandler);
+
+    if(response != null) {
+      Log.v("post " + service.toString() + " Response:", response);
+      // if this throws a JSONException - no json object returned
+      // => maybe wrong password
+      return new JSONObject(response);
+    } else {
+      return null;
+    }
+  }
+
+  public JSONObject deleteJSON(Service service) {
+    return deleteJSON(service,"");
+  }
+
+  public JSONObject deleteJSON(Service service, String params) {
+    HttpDelete method = new HttpDelete(getUrl(service, params));
+
+    method.setHeader("Accept", "application/json");
+
+    ResponseHandler<String> responseHandler = new BasicResponseHandler();
     String response = null;
+    try {
+      response = httpclient.execute(method, responseHandler);
+    } catch(IOException e) {
+      e.printStackTrace();
+    }
 
-    response = httpclient.execute(httpost, responseHandler);
-
-    Log.v("Response:", response);
+    if(response != null) {
+      Log.v("delete " + service.toString() + " Response:", response);
+    }
 
     // if this throws a JSONException - no json object returned
     // => maybe wrong password
-    return new JSONObject(response);
+    try {
+      if(response != null)
+        return new JSONObject(response);
+    } catch(JSONException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public int toggleStatus(final String username, final String password) {
     try {
       JSONObject userdata = new JSONObject().put("username", username).put("password", password);
-      Log.v("Data:", userdata.toString());
+      Log.v("posting data:", userdata.toString());
       postJSON(Service.STATUS, userdata);
     } catch (IOException ioe) {
       Log.v("IOE: ", ioe.toString());
@@ -178,11 +212,19 @@ public class ServiceClient {
     Cart cart = new Cart();
     try{
       JSONObject o = getJSONObject(Service.CART).getJSONObject("cart");
-      JSONArray oar = o.getJSONArray("articles");
-      for(int i = 0; i < oar.length(); i++) {
-        JSONObject artJSON = oar.getJSONObject(i);
-        EanArticle article = jsonToArticle(artJSON);
-        cart.addArticle(article);
+      JSONArray oar = o.optJSONArray("articles");
+      if(oar != null) {
+        for(int i = 0; i < oar.length(); i++) {
+          JSONObject artJSON = oar.getJSONObject(i);
+          EanArticle article = jsonToArticle(artJSON);
+          cart.addArticle(article);
+        }
+      } else {
+        JSONObject jsonObject = o.optJSONObject("articles");
+        if(jsonObject != null) {
+          EanArticle article = jsonToArticle(o.optJSONObject("articles"));
+          cart.addArticle(article);
+        }
       }
     }catch (Throwable th) {
       th.printStackTrace();
@@ -198,13 +240,22 @@ public class ServiceClient {
     return article;
   }
 
-  public Cart addArticleToCart(EanArticle article) {
+  public void addArticleToCart(EanArticle article) {
     try{
       JSONObject userdata = new JSONObject().put("ean", article.getEan());
       postJSON(Service.CART, userdata);
     }catch (Throwable th) {
       th.printStackTrace();
     }
+  }
+
+  public Cart emptyCart() {
+    deleteJSON(Service.CART);
+    return getCurrentCart();
+  }
+
+  public Cart removeArticleFromCart(String ean) {
+    deleteJSON(Service.CART,"/"+ean);
     return getCurrentCart();
   }
 
@@ -225,7 +276,7 @@ public class ServiceClient {
     JSONObject userdata = null;
     try {
       userdata = new JSONObject().put("username", username).put("password", password);
-      Log.v("Data:", userdata.toString());
+      Log.v("posting data:", userdata.toString());
       return postJSON(Service.PROFILE, userdata);
     } catch (IOException ioe) {
       Log.v("IOE: ", ioe.toString());
