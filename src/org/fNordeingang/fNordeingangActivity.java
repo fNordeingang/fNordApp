@@ -120,7 +120,8 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
         break;
       case R.id.fNordCash:
         // missing
-        fNordCashDialog();
+        startActivityForResult(new Intent(this, fNordCashActivity.class), requestCode);
+        //fNordCashDialog();
         break;
       case R.id.fNordSettings:
         // Launch settings activity

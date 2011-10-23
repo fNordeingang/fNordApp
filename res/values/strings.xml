@@ -23,4 +23,9 @@
     <string name="fNordSettingsUserfield">Username</string>
     <string name="fNordSettingsPassfield">Password</string>
     <string name="fNordSettingsSaveButton">Save</string>
+    <string name="fNordCashBalanceText">Current balance:</string>
+    <string name="fNordCashBalanceValue"> n/a</string>
+    <string name="fNordCashTabText1">Account</string>
+    <string name="fNordCashTabText2">Shopping</string>
+    <string name="fNordCashTabText3">Foo</string>
 </resources>

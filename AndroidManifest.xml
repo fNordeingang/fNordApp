@@ -15,6 +15,10 @@
 
     <activity android:name="fNordTweetActivity"/>
     <activity android:name="fNordSettingsActivity"/>
+    <activity android:name="fNordCashActivity"/>
+    <activity android:name="fNordCashAccountActivity"/>
+    <activity android:name="fNordCashShoppingActivity"/>
+    <activity android:name="fNordCashShopcartActivity"/>
     <uses-library android:name="android.test.runner" />
   </application>
   <uses-sdk android:minSdkVersion="3" />
