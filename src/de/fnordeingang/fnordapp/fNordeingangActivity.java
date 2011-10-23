@@ -23,6 +23,7 @@ import com.google.zxing.integration.android.IntentResult;
 import de.fnordeingang.fnordapp.util.CommonUtils;
 import de.fnordeingang.fnordapp.util.ServiceClient;
 import de.fnordeingang.fnordapp.util.dto.EanArticle;
+import de.fnordeingang.fnordapp.util.dto.UserProfile;
 import net.sf.andhsli.SimpleCrypto;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -154,14 +155,9 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
   }
 
   public String getUserProfile(String username, String password) {
-    try {
-      // get status
-      JSONObject profile = (new ServiceClient()).getProfile(username, password, CommonUtils.getDeviceUUID(getBaseContext(), getContentResolver()));
-      return profile.getString("balance");
-    } catch(JSONException e) {
-      e.printStackTrace();
-    }
-    return "none";
+    // get status
+    UserProfile profile = (new ServiceClient()).getProfile(username, password, CommonUtils.getDeviceUUID(getBaseContext(), getContentResolver()));
+    return profile.getBalance().toString();
   }
 
   public static int setfNordStatus(final String username, final String password) {
@@ -348,10 +344,9 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
   // helper function
   void print(String input) {
     Context context = getApplicationContext();
-    CharSequence text = input;
     int duration = Toast.LENGTH_SHORT;
 
-    Toast toast = Toast.makeText(context, text, duration);
+    Toast toast = Toast.makeText(context, input, duration);
     toast.show();
   }
 

@@ -4,8 +4,10 @@ import android.test.AndroidTestCase;
 import de.fnordeingang.fnordapp.util.ServiceClient;
 import de.fnordeingang.fnordapp.util.dto.Cart;
 import de.fnordeingang.fnordapp.util.dto.EanArticle;
+import de.fnordeingang.fnordapp.util.dto.UserProfile;
 import junit.framework.Assert;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -27,6 +29,13 @@ public class ServiceClientTest extends AndroidTestCase {
     ServiceClient client = new ServiceClient(HOST);
     Cart cart = client.emptyCart();
     Assert.assertTrue("cart size is zero", cart.getArticles().size() == 0);
+  }
+
+  public void testGetProfile() throws Exception {
+    ServiceClient client = new ServiceClient(HOST);
+    UserProfile userProfile = client.getProfile("viledatest","1234","ffff-ffff-ffff-ffff");
+    Assert.assertTrue("balance is equals 10 on test account", userProfile.getBalance().equals(BigDecimal.valueOf(10.0)));
+    Assert.assertTrue("user is the one we provided", "viledatest".equals(userProfile.getName()));
   }
 
   public void testAddArticleToCart() throws Exception {

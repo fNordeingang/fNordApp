@@ -3,6 +3,7 @@ package de.fnordeingang.fnordapp.util;
 import android.util.Log;
 import de.fnordeingang.fnordapp.util.dto.Cart;
 import de.fnordeingang.fnordapp.util.dto.EanArticle;
+import de.fnordeingang.fnordapp.util.dto.UserProfile;
 import de.mastacode.http.Http;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
@@ -55,10 +56,6 @@ public class ServiceClient {
     init();
   }
 
-  public String getServiceHost() {
-    return serviceHost;
-  }
-
   public String getUrl(Service service) {
     return getUrl(service,"");
   }
@@ -99,19 +96,6 @@ public class ServiceClient {
     }
     return null;
   }
-
-  public JSONArray getJSONArray(Service service) {
-    return getJSONArray(getJSON(service));
-  }
-
-  public JSONArray getJSONArray(String json) {
-      try {
-        return new JSONArray(json);
-      } catch(JSONException e) {
-        e.printStackTrace();
-      }
-      return null;
-    }
 
   public JSONObject postJSON(Service service, JSONObject data) throws IOException, JSONException {
     HttpPost httpost = new HttpPost(getUrl(service));
@@ -272,21 +256,21 @@ public class ServiceClient {
     return articles;
   }
 
-  public JSONObject getProfile(final String username, final String password, String deviceId) {
-    JSONObject userdata = null;
+  public UserProfile getProfile(final String username, final String password, String deviceId) {
+    JSONObject userdata;
+    UserProfile userProfile = new UserProfile(username);
     try {
       userdata = new JSONObject().put("username", username).put("password", password);
       Log.v("posting data:", userdata.toString());
-      return postJSON(Service.PROFILE, userdata);
+      userdata = postJSON(Service.PROFILE, userdata);
+      userProfile.setBalance(BigDecimal.valueOf(userdata.getDouble("balance")));
     } catch (IOException ioe) {
       Log.v("IOE: ", ioe.toString());
-      return userdata;
     } catch (JSONException jsone) {
       Log.v("JSONe: ", jsone.toString());
-      return userdata;
     } catch (Exception e) {
       Log.v("e: ", e.toString());
-      return userdata;
     }
+    return userProfile;
   }
 }
