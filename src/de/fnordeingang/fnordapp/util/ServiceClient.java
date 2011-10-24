@@ -220,9 +220,9 @@ public class ServiceClient {
 
   private EanArticle jsonToArticle(JSONObject artJSON) throws JSONException {
     EanArticle article = new EanArticle();
-    article.setEan(artJSON.getString("ean"));
-    article.setName(artJSON.getString("name"));
-    article.setDescription(artJSON.getString("description"));
+    article.setEan(artJSON.optString("ean",""));
+    article.setName(artJSON.optString("name",""));
+    article.setDescription(artJSON.optString("description",""));
     return article;
   }
 
