@@ -221,8 +221,9 @@ public class ServiceClient {
   private EanArticle jsonToArticle(JSONObject artJSON) throws JSONException {
     EanArticle article = new EanArticle();
     article.setEan(artJSON.optString("ean",""));
-    article.setName(artJSON.optString("name",""));
-    article.setDescription(artJSON.optString("description",""));
+    article.setName(artJSON.optString("name", ""));
+    article.setDescription(artJSON.optString("description", ""));
+    article.setPrice(BigDecimal.valueOf(artJSON.optDouble("price", 0.0)));
     return article;
   }
 

@@ -23,6 +23,7 @@ public class ServiceClientTest extends AndroidTestCase {
     ServiceClient client = new ServiceClient(HOST);
     EanArticle eanArticle = client.getArticleInfo("30058569");
     Assert.assertTrue("returned article is the one we searched for","Zigarettendrehpapier".equals(eanArticle.getDescription()));
+    Assert.assertTrue("returned article is not for free",eanArticle.getPrice().compareTo(BigDecimal.ZERO) > 0);
   }
 
   public void testEmptyCart() throws Exception {
@@ -53,6 +54,7 @@ public class ServiceClientTest extends AndroidTestCase {
     Cart cart = client.getCurrentCart();
     Assert.assertTrue("cart size is equals one", cart.getArticles().size() == 1);
     Assert.assertTrue("first cart item is the one we searched for","Zigarettendrehpapier".equals(cart.getArticle(0).getDescription()));
+    Assert.assertTrue("first returned article is not for free",cart.getArticle(0).getPrice().compareTo(BigDecimal.ZERO) > 0);
   }
 
   public void testRemoveArticleFromCart() throws Exception {
@@ -71,6 +73,7 @@ public class ServiceClientTest extends AndroidTestCase {
     ServiceClient client = new ServiceClient(HOST);
     List<EanArticle> articles = client.getAllArticles();
     Assert.assertTrue("there are more than zero articles in the list", articles.size() > 0);
+    Assert.assertTrue("first returned article is not for free",articles.get(0).getPrice().compareTo(BigDecimal.ZERO) > 0);
   }
 
   public void testToggleStatus() throws Exception {
