@@ -29,8 +29,8 @@ import java.util.Map;
  */
 public class ServiceClient {
   DefaultHttpClient httpclient = new DefaultHttpClient();
-  //String serviceHost = "services.fnordeingang.de";
-  String serviceHost = "172.29.1.47:8080";
+  String serviceHost = "services.fnordeingang.de";
+  //String serviceHost = "172.29.1.47:8080";
 
   public enum Service {
     STATUS,
