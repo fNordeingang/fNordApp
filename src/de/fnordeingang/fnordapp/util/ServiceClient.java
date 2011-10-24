@@ -29,7 +29,8 @@ import java.util.Map;
  */
 public class ServiceClient {
   DefaultHttpClient httpclient = new DefaultHttpClient();
-  String serviceHost = "services.fnordeingang.de";
+  //String serviceHost = "services.fnordeingang.de";
+  String serviceHost = "172.29.1.47:8080";
 
   public enum Service {
     STATUS,
@@ -66,7 +67,7 @@ public class ServiceClient {
   }
 
   public String getJSON(Service service, String params) {
-    String jsonstring = null;
+    String jsonstring = "";
     try {
       jsonstring = Http.get(getUrl(service, params)).use(httpclient).asString();
     } catch(IOException e) {
@@ -173,7 +174,6 @@ public class ServiceClient {
     EanArticle eanArticle = new EanArticle();
     try {
       JSONObject eanJson = getJSONObject(Service.EAN, ean);
-      eanJson = eanJson.getJSONObject("article");
 
       eanArticle.setEan(ean);
       eanArticle.setName(eanJson.getString("name"));
@@ -195,19 +195,21 @@ public class ServiceClient {
   public Cart getCurrentCart() {
     Cart cart = new Cart();
     try{
-      JSONObject o = getJSONObject(Service.CART).getJSONObject("cart");
-      JSONArray oar = o.optJSONArray("articles");
-      if(oar != null) {
-        for(int i = 0; i < oar.length(); i++) {
-          JSONObject artJSON = oar.getJSONObject(i);
-          EanArticle article = jsonToArticle(artJSON);
-          cart.addArticle(article);
-        }
-      } else {
-        JSONObject jsonObject = o.optJSONObject("articles");
-        if(jsonObject != null) {
-          EanArticle article = jsonToArticle(o.optJSONObject("articles"));
-          cart.addArticle(article);
+      JSONObject o = getJSONObject(Service.CART);
+      if(o != null) {
+        JSONArray oar = o.optJSONArray("articles");
+        if(oar != null) {
+          for(int i = 0; i < oar.length(); i++) {
+            JSONObject artJSON = oar.getJSONObject(i);
+            EanArticle article = jsonToArticle(artJSON);
+            cart.addArticle(article);
+          }
+        } else {
+          JSONObject jsonObject = o.optJSONObject("articles");
+          if(jsonObject != null) {
+            EanArticle article = jsonToArticle(o.optJSONObject("articles"));
+            cart.addArticle(article);
+          }
         }
       }
     }catch (Throwable th) {

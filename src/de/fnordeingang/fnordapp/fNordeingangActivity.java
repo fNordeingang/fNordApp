@@ -140,7 +140,6 @@ public class fNordeingangActivity extends Activity implements OnClickListener {
     try {
       // get status
       JSONObject status = (new ServiceClient()).getJSONObject(ServiceClient.Service.STATUS);
-      status = status.getJSONObject("status");
 
       if(status.getBoolean("open")) {
         return 1; // open

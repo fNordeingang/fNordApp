@@ -16,8 +16,8 @@ import java.util.List;
  * Time: 23:10
  */
 public class ServiceClientTest extends AndroidTestCase {
-  //private static final String HOST = "172.29.1.47:8080";
-  private static final String HOST = "services.fnordeingang.de";
+  private static final String HOST = "172.29.1.47:8080";
+  //private static final String HOST = "services.fnordeingang.de";
 
   public void testGetArticleInfo() throws Exception {
     ServiceClient client = new ServiceClient(HOST);
@@ -27,7 +27,14 @@ public class ServiceClientTest extends AndroidTestCase {
 
   public void testEmptyCart() throws Exception {
     ServiceClient client = new ServiceClient(HOST);
-    Cart cart = client.emptyCart();
+    EanArticle eanArticle = client.getArticleInfo("30058569");
+    client.emptyCart();
+    client.addArticleToCart(eanArticle);
+    Cart cart = client.getCurrentCart();
+    Assert.assertTrue("cart size is equals one", cart.getArticles().size() == 1);
+    Assert.assertTrue("first cart item is the one we searched for","Zigarettendrehpapier".equals(cart.getArticle(0).getDescription()));
+    client.emptyCart();
+    cart = client.getCurrentCart();
     Assert.assertTrue("cart size is zero", cart.getArticles().size() == 0);
   }
 
@@ -56,6 +63,7 @@ public class ServiceClientTest extends AndroidTestCase {
     Cart cart = client.getCurrentCart();
     Assert.assertTrue("cart size is equals 1", cart.getArticles().size() == 1);
     client.removeArticleFromCart("30058569");
+    cart = client.getCurrentCart();
     Assert.assertTrue("cart size is equals 0", cart.getArticles().size() == 0);
   }
 
@@ -63,5 +71,11 @@ public class ServiceClientTest extends AndroidTestCase {
     ServiceClient client = new ServiceClient(HOST);
     List<EanArticle> articles = client.getAllArticles();
     Assert.assertTrue("there are more than zero articles in the list", articles.size() > 0);
+  }
+
+  public void testToggleStatus() throws Exception {
+    ServiceClient client = new ServiceClient(HOST);
+    int status = client.toggleStatus("viledatest","1234");
+    Assert.assertTrue("status is equals one", status == 1);
   }
 }
